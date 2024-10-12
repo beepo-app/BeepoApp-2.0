@@ -10,7 +10,6 @@ import 'package:Beepo/widgets/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -20,7 +19,8 @@ class SignUp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final walletProvider = Provider.of<WalletProvider>(context, listen: false);
-    final accountProvider = Provider.of<AccountProvider>(context, listen: false);
+    final accountProvider =
+        Provider.of<AccountProvider>(context, listen: false);
 
     return Scaffold(
       body: Align(
@@ -42,12 +42,22 @@ class SignUp extends StatelessWidget {
               // const Spacer(),
               BeepoFilledButtons(
                 text: 'Create Account',
-                onPressed: () => Get.to(() => const CreateAccountScreen()),
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const CreateAccountScreen(),
+                  ),
+                ),
               ),
               SizedBox(height: 33.h),
               BeepoFilledButtons(
                 text: 'Import Wallet',
-                onPressed: () => Get.to(() => const LoginScreen()),
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const LoginScreen(),
+                  ),
+                ),
               ),
               SizedBox(height: 33.h),
               Row(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -114,7 +124,7 @@ class SignUp extends StatelessWidget {
                     users = Hive.box('Beepo2.0').get('allUsers');
                     if (users == null) {
                       Future.delayed(const Duration(seconds: 5));
-                      Get.back();
+                      Navigator.pop(context);
                       showToast("An error Occured, Please Try Again!");
                       return;
                     }
@@ -122,20 +132,31 @@ class SignUp extends StatelessWidget {
                     await walletProvider.initMPCWalletState(res);
                     if (walletProvider.ethAddress != null) {
                       // users = await Hive.box('Beepo2.0').get('allUsers');
-                      var newRes = users.firstWhereOrNull((e) => e['ethAddress'] == walletProvider.ethAddress.toString());
+                      var newRes = users.firstWhereOrNull((e) =>
+                          e['ethAddress'] ==
+                          walletProvider.ethAddress.toString());
 
                       if (newRes == null) {
-                        Get.back();
-                        Get.to(() => const CreateAccountScreen());
+                        Navigator.pop(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const CreateAccountScreen(),
+                          ),
+                        );
+
                         return;
                       }
-                      Get.back();
-                      Get.to(
-                        () => PinCode(
-                          data: {'response': newRes, 'mpc': res},
-                          isSignedUp: false,
-                        ),
-                      );
+                      Navigator.pop(context);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PinCode(
+                              data: {'response': newRes, 'mpc': res},
+                              isSignedUp: false,
+                            ),
+                          ));
+
                       return;
                     }
                     return;

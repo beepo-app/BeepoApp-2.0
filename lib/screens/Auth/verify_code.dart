@@ -13,7 +13,6 @@ import 'package:Beepo/widgets/toast.dart';
 import 'package:encrypt/encrypt.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -28,6 +27,7 @@ class VerifyCode extends StatefulWidget {
   final String? type;
   final String pin;
   final String? mnemonic;
+  // ignore: use_super_parameters
   const VerifyCode(
       {key,
       required this.image,
@@ -47,6 +47,7 @@ class _VerifyCodeState extends State<VerifyCode> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -82,7 +83,7 @@ class _VerifyCodeState extends State<VerifyCode> {
             ),
             const SizedBox(height: 70),
             SizedBox(
-              width: Get.size.width * 0.6,
+              width: size.width * 0.6,
               child: PinCodeTextField(
                 appContext: context,
                 keyboardType: TextInputType.number,
@@ -177,10 +178,13 @@ class _VerifyCodeState extends State<VerifyCode> {
                         await accountProvider.initAccountState();
 
                         Hive.box('Beepo2.0').put('isAutoLockSwitch', true);
-                        Get.back();
 
-                        Get.to(
-                          () => const BottomNavHome(),
+                        Navigator.pop(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const BottomNavHome(),
+                          ),
                         );
                         return;
                       } catch (e) {
@@ -218,10 +222,12 @@ class _VerifyCodeState extends State<VerifyCode> {
                         await session.authorize(credentials.asSigner());
                       }
                       await accountProvider.initAccountState();
-
-                      Get.back();
-                      Get.to(
-                        () => const BottomNavHome(),
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const BottomNavHome(),
+                        ),
                       );
                     } catch (e) {
                       if (kDebugMode) {

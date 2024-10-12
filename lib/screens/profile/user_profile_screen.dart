@@ -158,7 +158,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                             text: 'Block',
                                             onPressed: () {
                                               showToast('Coming Soon!');
-                                              Get.back();
+                                              Navigator.pop(context);
                                             },
                                             color: AppColors.secondaryColor,
                                           ),

@@ -6,7 +6,6 @@ import 'package:Beepo/screens/Auth/pin_code.dart';
 import 'package:Beepo/utils/functions.dart';
 import 'package:Beepo/widgets/toast.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
 class CreateAccountScreen extends StatefulWidget {
@@ -80,7 +79,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   bottom: 10,
                   child: GestureDetector(
                     onTap: () {
-                      ImageUtil().pickProfileImage(context: context).then((value) {
+                      ImageUtil()
+                          .pickProfileImage(context: context)
+                          .then((value) {
                         if (value != null) {
                           setState(() {
                             selectedImage = value;
@@ -125,20 +126,25 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
               text: 'Next',
               color: const Color(0xffFF9C34),
               onPressed: () async {
-                if (displayName.text.trim().isEmpty || displayName.text.trim().length < 3) {
-                  showToast('Please enter a display name with a minimum length of 4 characters');
+                if (displayName.text.trim().isEmpty ||
+                    displayName.text.trim().length < 3) {
+                  showToast(
+                      'Please enter a display name with a minimum length of 4 characters');
                   return;
                 }
                 if (selectedImage == null) {
                   showToast('Please select a display image');
                   return;
                 } else {
-                  Get.to(
-                    () => PinCode(
-                      mnemonic: widget.mnemonic,
-                      image: selectedImage,
-                      name: displayName.text.trim(),
-                      isSignedUp: false,
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PinCode(
+                        mnemonic: widget.mnemonic,
+                        image: selectedImage,
+                        name: displayName.text.trim(),
+                        isSignedUp: false,
+                      ),
                     ),
                   );
                 }

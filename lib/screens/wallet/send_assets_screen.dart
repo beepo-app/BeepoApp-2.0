@@ -10,8 +10,8 @@ class SendAssetsScreen extends StatefulWidget {
   final List<dynamic> assets_;
   const SendAssetsScreen({
     required this.assets_,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<SendAssetsScreen> createState() => _SendAssetsScreenState();
@@ -27,7 +27,7 @@ class _SendAssetsScreenState extends State<SendAssetsScreen> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            Get.back();
+            Navigator.pop(context);
           },
           icon: const Icon(
             Icons.arrow_back,
@@ -87,7 +87,13 @@ class _SendAssetsScreenState extends State<SendAssetsScreen> {
                     color: AppColors.white,
                     child: ListTile(
                       onTap: () {
-                        Get.to(() => SendToken(data: assets[index]));
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                SendToken(data: assets[index]),
+                          ),
+                        );
                       },
                       leading: Image.network(assets[index]['logoUrl']),
                       title: Row(
@@ -102,15 +108,22 @@ class _SendAssetsScreenState extends State<SendAssetsScreen> {
                         children: [
                           Row(
                             children: [
-                              AppText(text: '\$${assets[index]['current_price'].toString()}'),
+                              AppText(
+                                  text:
+                                      '\$${assets[index]['current_price'].toString()}'),
                               SizedBox(width: 8.w),
                               AppText(
-                                text: '${assets[index]['24h_price_change'].toString()}%',
-                                color: assets[index]['24h_price_change'] > 0 ? AppColors.activeTextColor : AppColors.favouriteButtonRed,
+                                text:
+                                    '${assets[index]['24h_price_change'].toString()}%',
+                                color: assets[index]['24h_price_change'] > 0
+                                    ? AppColors.activeTextColor
+                                    : AppColors.favouriteButtonRed,
                               ),
                             ],
                           ),
-                          AppText(text: "\$${assets[index]['bal_to_price'].toString()}"),
+                          AppText(
+                              text:
+                                  "\$${assets[index]['bal_to_price'].toString()}"),
                         ],
                       ),
                     ),

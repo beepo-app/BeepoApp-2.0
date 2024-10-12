@@ -3,11 +3,9 @@ import 'dart:typed_data';
 
 import 'package:Beepo/constants/constants.dart';
 import 'package:Beepo/providers/account_provider.dart';
-import 'package:Beepo/screens/profile/account_type_screen.dart';
 import 'package:Beepo/screens/profile/edit_profile_screen.dart';
 import 'package:Beepo/screens/profile/user_profile_security_screen.dart';
 import 'package:Beepo/widgets/app_text.dart';
-import 'package:Beepo/widgets/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -78,7 +76,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   SizedBox(width: 8.w),
                   GestureDetector(
                     onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
                         return EditProfileScreen(imageBytes: imageBytes);
                       }));
                     },
@@ -184,7 +183,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               SizedBox(height: 15.h),
               InkWell(
                 onTap: () {
-                  Get.to(() => const About());
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const About()),
+                  );
                 },
                 child: Row(
                   children: [

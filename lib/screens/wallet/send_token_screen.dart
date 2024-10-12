@@ -17,8 +17,8 @@ class SendToken extends StatefulWidget {
   final Map? data;
   const SendToken({
     this.data,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<SendToken> createState() => _SendTokenState();
@@ -59,7 +59,7 @@ class _SendTokenState extends State<SendToken> {
         ),
         leading: IconButton(
           onPressed: () {
-            Get.back();
+            Navigator.pop(context);
           },
           icon: const Icon(
             Icons.arrow_back,
@@ -93,7 +93,8 @@ class _SendTokenState extends State<SendToken> {
                 ),
                 decoration: InputDecoration(
                   suffixIcon: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 5.w),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 15.w, vertical: 5.w),
                     child: SizedBox(
                       width: MediaQuery.of(context).size.width / 6,
                       child: Row(
@@ -242,18 +243,29 @@ class _SendTokenState extends State<SendToken> {
                     showToast("Invalid Address Entered!");
                     return;
                   }
-                  final walletProvider = Provider.of<WalletProvider>(context, listen: false);
-                  Decimal res = await walletProvider.estimateGasPrice(asset['rpc']);
+                  final walletProvider =
+                      Provider.of<WalletProvider>(context, listen: false);
+                  Decimal res =
+                      await walletProvider.estimateGasPrice(asset['rpc']);
 
                   var amountToSend = res + Decimal.parse(amount.text);
 
-                  if (amountToSend > Decimal.parse(asset['bal']) || double.parse(asset['bal']) == 0) {
+                  if (amountToSend > Decimal.parse(asset['bal']) ||
+                      double.parse(asset['bal']) == 0) {
                     showToast("Insufficient Funds!");
                     return;
                   }
-
-                  Get.to(
-                    () => SendTokenConfirmScreen(asset: asset, data: {'amount': amount.text, 'gasFee': res, "address": address.text}),
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SendTokenConfirmScreen(
+                          asset: asset,
+                          data: {
+                            'amount': amount.text,
+                            'gasFee': res,
+                            "address": address.text
+                          }),
+                    ),
                   );
                 },
               ),

@@ -60,7 +60,7 @@ class _WalletTokenScreenState extends State<WalletTokenScreen> {
         backgroundColor: Colors.transparent,
         leading: IconButton(
           onPressed: () {
-            Get.back();
+            Navigator.pop(context);
           },
           icon: const Icon(
             Icons.arrow_back_rounded,

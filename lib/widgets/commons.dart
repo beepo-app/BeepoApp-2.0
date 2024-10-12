@@ -6,6 +6,7 @@ import 'package:Beepo/utils/logger.dart';
 import 'package:Beepo/widgets/toast.dart';
 import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
@@ -330,17 +331,19 @@ class _InChatTxState extends State<InChatTx> {
                       showToast("Insufficient Funds!");
                       return;
                     }
-
-                    Get.back();
-                    Get.to(
-                      () => SendTokenConfirmScreen(
-                          asset: asset,
-                          data: {
-                            'amount': amount.text,
-                            'gasFee': res,
-                            "address": address
-                          },
-                          type: 'inChatTx'),
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SendTokenConfirmScreen(
+                            asset: asset,
+                            data: {
+                              'amount': amount.text,
+                              'gasFee': res,
+                              "address": address
+                            },
+                            type: 'inChatTx'),
+                      ),
                     );
                   },
                 ),

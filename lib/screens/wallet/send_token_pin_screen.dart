@@ -11,6 +11,7 @@ import 'package:Beepo/widgets/app_text.dart';
 import 'package:Beepo/widgets/commons.dart';
 import 'package:Beepo/widgets/toast.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -136,21 +137,28 @@ class _SendTokenPinScreenState extends State<SendTokenPinScreen> {
                       showToast("Incorrect Pin Entered");
                       return;
                     }
-                    loadingDialog('Sending ${txData['data']['amount']} ${txData['asset']['ticker']}');
+                    loadingDialog(
+                        'Sending ${txData['data']['amount']} ${txData['asset']['ticker']}');
 
                     Map asset = txData['asset'];
                     Map data = txData['data'];
 
                     if (asset['native'] != null && asset['native'] == true) {
-                      await walletProvider.sendNativeToken(data['address'], asset['rpc'], data['amount']);
+                      await walletProvider.sendNativeToken(
+                          data['address'], asset['rpc'], data['amount']);
                     } else {
-                      await walletProvider.sendERC20(asset['contractAddress'], data['address'], asset['rpc'], data['amount']);
+                      await walletProvider.sendERC20(asset['contractAddress'],
+                          data['address'], asset['rpc'], data['amount']);
                     }
 
                     if (widget.type != null) {
-                      List<xmtp.Conversation> conversations = chatProvider.convos!;
-                      List<xmtp.Conversation> convo =
-                          conversations.where((element) => element.peer.toString() == data['address'].toString()).toList();
+                      List<xmtp.Conversation> conversations =
+                          chatProvider.convos!;
+                      List<xmtp.Conversation> convo = conversations
+                          .where((element) =>
+                              element.peer.toString() ==
+                              data['address'].toString())
+                          .toList();
 
                       await session.sendMessage(
                           convo[0].topic,
@@ -164,8 +172,12 @@ class _SendTokenPinScreenState extends State<SendTokenPinScreen> {
                             },
                           ));
                     }
-
-                    Get.to(() => TransferSuccess(txData: txData));
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              TransferSuccess(txData: txData)),
+                    );
                   }
                 },
               ),

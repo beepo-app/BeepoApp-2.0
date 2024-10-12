@@ -10,8 +10,6 @@ import 'package:Beepo/utils/logger.dart';
 import 'package:Beepo/widgets/commons.dart';
 import 'package:Beepo/widgets/toast.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -97,10 +95,11 @@ class _LockScreenState extends State<LockScreen> {
 
       Future.delayed(const Duration(seconds: 3));
       Hive.box('Beepo2.0').put('isLocked', false);
-
-      Get.to(
-        () => const BottomNavHome(),
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const BottomNavHome()),
       );
+
       return;
     }
     beepoPrint('object 111');
@@ -116,13 +115,15 @@ class _LockScreenState extends State<LockScreen> {
     var ds = await chatProvider.getAllStatus(accountProvider.db);
     beepoPrint(ds);
     Hive.box('Beepo2.0').put('isLocked', false);
-    Get.to(
-      () => const BottomNavHome(),
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const BottomNavHome()),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return PopScope(
       canPop: false,
       child: Scaffold(
@@ -148,7 +149,7 @@ class _LockScreenState extends State<LockScreen> {
               ),
               const SizedBox(height: 20),
               SizedBox(
-                width: Get.size.width * 0.6,
+                width: size.width * 0.6,
                 child: PinCodeTextField(
                   appContext: context,
                   keyboardType: TextInputType.number,

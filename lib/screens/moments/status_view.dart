@@ -27,14 +27,20 @@ class _StatusViewState extends State<StatusView> {
   String selectedItem = 'Public';
 
   void uploadStatus() async {
-    final accountProvider = Provider.of<AccountProvider>(context, listen: false);
+    final accountProvider =
+        Provider.of<AccountProvider>(context, listen: false);
 
-    ChatProvider().uploadStatus(base64Encode(widget.img), accountProvider.db, input.text, selectedItem, accountProvider.ethAddress);
+    ChatProvider().uploadStatus(base64Encode(widget.img), accountProvider.db,
+        input.text, selectedItem, accountProvider.ethAddress);
     input.clear();
     // widget.cam.dispose();
-    Get.to(
-      () => const BottomNavHome(),
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const BottomNavHome(),
+      ),
     );
+
     showToast('Uploading Status!');
   }
 
@@ -94,7 +100,8 @@ class _StatusViewState extends State<StatusView> {
                           border: border,
                           focusedBorder: border,
                           enabledBorder: border,
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 5),
                           hintText: "Type message...",
                           hintStyle: const TextStyle(
                             color: AppColors.secondaryColor,
@@ -166,7 +173,8 @@ class _StatusViewState extends State<StatusView> {
                   }).toList();
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 3),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 15, vertical: 3),
                   child: Center(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,

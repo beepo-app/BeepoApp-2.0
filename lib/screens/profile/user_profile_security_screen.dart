@@ -3,14 +3,11 @@ import 'package:Beepo/constants/constants.dart';
 import 'package:Beepo/providers/account_provider.dart';
 import 'package:Beepo/providers/wallet_provider.dart';
 import 'package:Beepo/screens/Auth/onboarding_screen.dart';
-import 'package:Beepo/screens/profile/profile_screen.dart';
 import 'package:Beepo/screens/wallet/phrase_confirm_screen.dart';
 import 'package:Beepo/widgets/app_text.dart';
-import 'package:Beepo/widgets/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:get/get_navigation/get_navigation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -18,7 +15,8 @@ class UserProfileSecurityScreen extends StatefulWidget {
   const UserProfileSecurityScreen({super.key});
 
   @override
-  State<UserProfileSecurityScreen> createState() => _UserProfileSecurityScreenState();
+  State<UserProfileSecurityScreen> createState() =>
+      _UserProfileSecurityScreenState();
 }
 
 class _UserProfileSecurityScreenState extends State<UserProfileSecurityScreen> {
@@ -32,7 +30,7 @@ class _UserProfileSecurityScreenState extends State<UserProfileSecurityScreen> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            Get.back();
+            Navigator.pop(context);
           },
           icon: const Icon(
             Icons.arrow_back,
@@ -154,7 +152,8 @@ class _UserProfileSecurityScreenState extends State<UserProfileSecurityScreen> {
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               content: Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 20),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 20),
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
@@ -177,10 +176,19 @@ class _UserProfileSecurityScreenState extends State<UserProfileSecurityScreen> {
                                     BeepoFilledButtons(
                                       text: 'Delete',
                                       onPressed: () async {
-                                        final accountProvider = Provider.of<AccountProvider>(context, listen: false);
+                                        final accountProvider =
+                                            Provider.of<AccountProvider>(
+                                                context,
+                                                listen: false);
 
-                                        await accountProvider.deleteUser(accountProvider.db);
-                                        Get.to(() => const OnboardingScreen());
+                                        await accountProvider
+                                            .deleteUser(accountProvider.db);
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const OnboardingScreen()),
+                                        );
                                       },
                                       color: Colors.red,
                                     ),

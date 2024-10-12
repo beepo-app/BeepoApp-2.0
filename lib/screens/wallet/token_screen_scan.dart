@@ -26,7 +26,8 @@ class TokenScreenScan extends StatelessWidget {
         centerTitle: true,
         leading: IconButton(
           onPressed: () {
-            Get.back();
+            Navigator.pop(context);
+
             // Navigator.push(context, MaterialPageRoute(builder: (context) {
             //   return const ReceivedAssetScreen(assets_: [
             //     {'assets': 'ooo'}

@@ -58,20 +58,23 @@ class _MomentsScreensState extends State<MomentsScreens> {
     List? viewedStatuses = Hive.box('Beepo2.0').get('viewedStatuses');
 
     if (viewedStatuses != null) {
-      var viewed = viewedStatuses.firstWhereOrNull((e) => e == statuses[_activePage]['id']);
+      var viewed = viewedStatuses
+          .firstWhereOrNull((e) => e == statuses[_activePage]['id']);
       if (viewed == null) {
         viewedStatuses.add(statuses[_activePage]['id']);
         Hive.box('Beepo2.0').put('viewedStatuses', viewedStatuses);
 
-        dbUpdateStatusViewsCount(acctProvider.db!, statuses[_activePage]['id'], allStatuses[sIndex]['ethAddress'], acctProvider.ethAddress!);
+        dbUpdateStatusViewsCount(acctProvider.db!, statuses[_activePage]['id'],
+            allStatuses[sIndex]['ethAddress'], acctProvider.ethAddress!);
       }
     } else {
       List v = [];
       v.add(statuses[_activePage]['id']);
       Hive.box('Beepo2.0').put('viewedStatuses', v);
 
-      dbUpdateStatusViewsCount(acctProvider.db!, statuses[_activePage]['id'], allStatuses[sIndex]['ethAddress'], acctProvider.ethAddress!);
-    }     
+      dbUpdateStatusViewsCount(acctProvider.db!, statuses[_activePage]['id'],
+          allStatuses[sIndex]['ethAddress'], acctProvider.ethAddress!);
+    }
 
     String? me = (context.read<AccountProvider>().ethAddress);
 
@@ -96,7 +99,8 @@ class _MomentsScreensState extends State<MomentsScreens> {
                   behavior: HitTestBehavior.opaque,
                   onTapUp: (details) {
                     double width = (MediaQuery.of(context).size.width);
-                    if (details.globalPosition.dx <= (width / 2)) return _prev(index);
+                    if (details.globalPosition.dx <= (width / 2))
+                      return _prev(index);
                     _next(index, statuses);
                   },
                   onVerticalDragEnd: (details) {
@@ -107,9 +111,12 @@ class _MomentsScreensState extends State<MomentsScreens> {
                         showToast('First Item!');
                         return;
                       }
-                      var prevStatus = users.firstWhereOrNull((e) => e['ethAddress'] == allStatuses[sIndex - 1]['data'].last['ethAddress']);
-                      Get.back(
-                        result: {
+                      var prevStatus = users.firstWhereOrNull((e) =>
+                          e['ethAddress'] ==
+                          allStatuses[sIndex - 1]['data'].last['ethAddress']);
+                      Navigator.pop(
+                        context,
+                        {
                           'data': allStatuses,
                           "curIndex": sIndex - 1,
                           'userData': prevStatus,
@@ -119,14 +126,18 @@ class _MomentsScreensState extends State<MomentsScreens> {
 
                     if (details.primaryVelocity! < 0) {
                       if (sIndex < allStatuses.length - 1) {
-                        var nextStatus = users.firstWhereOrNull((e) => e['ethAddress'] == allStatuses[sIndex + 1]['data'].last['ethAddress']);
-                        Get.back(
-                          result: {
+                        var nextStatus = users.firstWhereOrNull((e) =>
+                            e['ethAddress'] ==
+                            allStatuses[sIndex + 1]['data'].last['ethAddress']);
+                        Navigator.pop(
+                          context,
+                          {
                             'data': allStatuses,
                             "curIndex": sIndex + 1,
                             'userData': nextStatus,
                           },
                         );
+
                         return;
                       }
                       showToast('Last Item Reached!');
@@ -137,7 +148,8 @@ class _MomentsScreensState extends State<MomentsScreens> {
                     width: double.infinity,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: MemoryImage(base64Decode(statuses[index]['image'])),
+                        image:
+                            MemoryImage(base64Decode(statuses[index]['image'])),
                         fit: BoxFit.contain,
                       ),
                     ),
@@ -151,15 +163,20 @@ class _MomentsScreensState extends State<MomentsScreens> {
                 children: List<Widget>.generate(
                   statuses.length,
                   (index) => Padding(
-                    padding: EdgeInsets.symmetric(horizontal: statuses.length > 10 ? 2 : 10),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: statuses.length > 10 ? 2 : 10),
                     child: statuses.length > 10
                         ? Padding(
                             padding: const EdgeInsets.only(top: 25.0),
                             child: Container(
-                              width: (MediaQuery.of(context).size.width / statuses.length) - 4,
+                              width: (MediaQuery.of(context).size.width /
+                                      statuses.length) -
+                                  4,
                               height: 5.0,
                               decoration: BoxDecoration(
-                                color: _activePage == index ? Colors.white : Colors.grey,
+                                color: _activePage == index
+                                    ? Colors.white
+                                    : Colors.grey,
                                 borderRadius: BorderRadius.circular(20.0),
                               ),
                             ),
@@ -167,16 +184,23 @@ class _MomentsScreensState extends State<MomentsScreens> {
                         : InkWell(
                             onTap: () {
                               // _pageController.nextPage(duration: duration, curve: curve)
-                              _pageController.animateToPage(index, duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+                              _pageController.animateToPage(index,
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.easeIn);
                             },
                             child: Padding(
                               padding: const EdgeInsets.only(top: 25.0),
                               child: Container(
-                                width: (MediaQuery.of(context).size.width / statuses.length) - 20, // Adjust the width as needed
+                                width: (MediaQuery.of(context).size.width /
+                                        statuses.length) -
+                                    20, // Adjust the width as needed
                                 height: 5.0, // Adjust the height as needed
                                 decoration: BoxDecoration(
-                                  color: _activePage == index ? Colors.white : Colors.grey, // Background color
-                                  borderRadius: BorderRadius.circular(20.0), // Adjust the radius to round the corners
+                                  color: _activePage == index
+                                      ? Colors.white
+                                      : Colors.grey, // Background color
+                                  borderRadius: BorderRadius.circular(
+                                      20.0), // Adjust the radius to round the corners
                                 ),
                               ),
                             ),
@@ -196,7 +220,7 @@ class _MomentsScreensState extends State<MomentsScreens> {
                     children: [
                       IconButton(
                         onPressed: () {
-                          Get.back();
+                          Navigator.pop(context);
                         },
                         icon: const Icon(
                           Icons.arrow_back,
@@ -211,14 +235,18 @@ class _MomentsScreensState extends State<MomentsScreens> {
                         children: [
                           CircleAvatar(
                             radius: 20.r,
-                            backgroundImage: CacheMemoryImageProvider(userData['image'], base64Decode(userData['image'])),
+                            backgroundImage: CacheMemoryImageProvider(
+                                userData['image'],
+                                base64Decode(userData['image'])),
                           ),
                           SizedBox(width: 10.w),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                me == (userData['ethAddress']) ? "You" : userData['displayName'],
+                                me == (userData['ethAddress'])
+                                    ? "You"
+                                    : userData['displayName'],
                                 style: TextStyle(
                                   fontSize: 11.sp,
                                   color: AppColors.white,
@@ -255,24 +283,27 @@ class _MomentsScreensState extends State<MomentsScreens> {
                               Widget cancelButton = TextButton(
                                 child: const Text("No"),
                                 onPressed: () {
-                                  Get.back();
+                                  Navigator.pop(context);
                                 },
                               );
                               Widget continueButton = TextButton(
                                 child: const Text("Yes"),
                                 onPressed: () async {
                                   statuses.remove(statuses[_activePage]);
-                                  Get.back();
-                                  Get.back();
+                                  Navigator.pop(context);
                                   showToast('Deleting Status!');
-                                  await chatProvider.deleteStatus(acctProvider.db, statuses, acctProvider.ethAddress);
+                                  await chatProvider.deleteStatus(
+                                      acctProvider.db,
+                                      statuses,
+                                      acctProvider.ethAddress);
                                 },
                               );
 
                               // set up the AlertDialog
                               AlertDialog alert = AlertDialog(
                                 title: const Text("Delete Status!"),
-                                content: const Text("Are you sure you want to delete this status?"),
+                                content: const Text(
+                                    "Are you sure you want to delete this status?"),
                                 actions: [
                                   cancelButton,
                                   continueButton,

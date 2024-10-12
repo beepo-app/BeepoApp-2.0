@@ -5,7 +5,6 @@ import 'package:Beepo/utils/logger.dart';
 import 'package:Beepo/widgets/toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
@@ -72,7 +71,7 @@ class ImageUtil {
                     return;
                   } else {
                     Uint8List res = await result.readAsBytes();
-                    Get.back(result: res);
+                    Navigator.pop(context, res);
                   }
                 } else {
                   return;
@@ -92,7 +91,7 @@ class ImageUtil {
                     return;
                   } else {
                     Uint8List res = await result.readAsBytes();
-                    Get.back(result: res);
+                    Navigator.pop(context, res);
                   }
                 } else {
                   return;
@@ -103,7 +102,7 @@ class ImageUtil {
           ],
           cancelButton: CupertinoActionSheetAction(
             onPressed: () {
-              Get.back();
+              Navigator.pop(context);
             },
             child: const Text('Cancel'),
           ),

@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:Beepo/screens/moments/add_story.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-import 'package:get/get.dart';
 
 class InitCamera extends StatefulWidget {
   final bool backDirection;
@@ -26,10 +25,15 @@ class InitCameraState extends State<InitCamera> {
     final cameras = await availableCameras();
 
     final backCamera = cameras.firstWhere(
-      (camera) => camera.lensDirection == (backDirection ? CameraLensDirection.back : CameraLensDirection.front),
+      (camera) =>
+          camera.lensDirection ==
+          (backDirection
+              ? CameraLensDirection.back
+              : CameraLensDirection.front),
       orElse: () => cameras.first,
     );
-    _controller = CameraController(backCamera, ResolutionPreset.ultraHigh, enableAudio: true);
+    _controller = CameraController(backCamera, ResolutionPreset.ultraHigh,
+        enableAudio: true);
     initializeControllerFuture = _controller.initialize();
 
     // if (!_controller.value.isInitialized) return;
@@ -44,7 +48,8 @@ class InitCameraState extends State<InitCamera> {
         ),
       ).then((value) {
         if (value == null) {
-          Get.back();
+          Navigator.pop(context);
+
           return;
         }
         _initializeCamera(value);

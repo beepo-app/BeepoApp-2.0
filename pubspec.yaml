@@ -92,6 +92,7 @@ dependencies:
   local_auth: ^2.1.8
   webview_flutter: ^4.5.0
   share_plus: ^10.0.0
+  collection: ^1.18.0
 
 dev_dependencies:
   flutter_test:

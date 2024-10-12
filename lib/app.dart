@@ -10,7 +10,6 @@ import 'package:Beepo/utils/logger.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:xmtp/xmtp.dart' as xmtp;
@@ -125,12 +124,14 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           break;
         case AppLifecycleState.paused:
           Hive.box('Beepo2.0').put('isLocked', true);
-          Get.to(() => const LockScreen());
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const LockScreen()));
           beepoPrint('left app paused');
           break;
         case AppLifecycleState.detached:
           Hive.box('Beepo2.0').put('isLocked', true);
-          Get.to(() => const LockScreen());
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const LockScreen()));
           beepoPrint('left app detached');
           break;
         case AppLifecycleState.inactive:
@@ -138,7 +139,12 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           break;
         case AppLifecycleState.hidden:
           Hive.box('Beepo2.0').put('isLocked', true);
-          Get.to(() => const LockScreen());
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const LockScreen(),
+            ),
+          );
           beepoPrint('left app hidden');
           break;
       }

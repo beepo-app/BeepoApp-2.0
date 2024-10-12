@@ -8,9 +8,9 @@ import 'package:Beepo/screens/messaging/chats/chat_dm_screen.dart';
 import 'package:Beepo/session/foreground_session.dart';
 import 'package:Beepo/widgets/toast.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:string_to_color/string_to_color.dart';
@@ -117,7 +117,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     children: [
                       IconButton(
                         onPressed: () {
-                          Get.back();
+                          Navigator.pop(context);
                         },
                         icon: const Icon(
                           Icons.arrow_back,
@@ -265,11 +265,15 @@ class _SearchScreenState extends State<SearchScreen> {
                                         try {
                                           var data =
                                               await newConvo(userAddress);
-                                          Get.to(
-                                            () => ChatDmScreen(
-                                              topic: data,
-                                              senderAddress: userAddress,
-                                              userData: userDataArray![index],
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ChatDmScreen(
+                                                topic: data,
+                                                senderAddress: userAddress,
+                                                userData: userDataArray![index],
+                                              ),
                                             ),
                                           );
                                         } catch (e) {
@@ -357,11 +361,14 @@ class _SearchScreenState extends State<SearchScreen> {
 
                                       try {
                                         var data = await newConvo(userAddress);
-                                        Get.to(
-                                          () => ChatDmScreen(
-                                            topic: data,
-                                            senderAddress: userAddress,
-                                            userData: userDataArray![0],
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => ChatDmScreen(
+                                              topic: data,
+                                              senderAddress: userAddress,
+                                              userData: userDataArray![0],
+                                            ),
                                           ),
                                         );
                                       } catch (e) {
@@ -375,10 +382,13 @@ class _SearchScreenState extends State<SearchScreen> {
                                       }
                                       return;
                                     }
-                                    Get.to(
-                                      () => ChatDmScreen(
-                                        topic: topic!,
-                                        senderAddress: address,
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ChatDmScreen(
+                                          topic: topic!,
+                                          senderAddress: address,
+                                        ),
                                       ),
                                     );
                                     return;

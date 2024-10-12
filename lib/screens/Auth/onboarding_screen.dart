@@ -2,7 +2,6 @@ import 'package:Beepo/screens/Auth/signup_screen.dart';
 import 'package:Beepo/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import '../../Utils/styles.dart';
 import "package:lottie/lottie.dart";
 
@@ -122,7 +121,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   child: TextButton(
                     onPressed: () {
                       if (check == body.length - 1) {
-                        Get.to(() => const SignUp());
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const SignUp()),
+                        );
                       } else {
                         controller.animateToPage(
                           check + 1,

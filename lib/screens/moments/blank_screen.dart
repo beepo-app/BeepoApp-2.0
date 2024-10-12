@@ -9,7 +9,8 @@ import 'package:get/get.dart';
 class BlankScreen extends StatefulWidget {
   final List<int> compressedBytes;
   final CameraController cam;
-  const BlankScreen({super.key, required this.compressedBytes, required this.cam});
+  const BlankScreen(
+      {super.key, required this.compressedBytes, required this.cam});
 
   @override
   BlankScreenState createState() => BlankScreenState();
@@ -34,7 +35,8 @@ class BlankScreenState extends State<BlankScreen> {
           ),
         ),
       ).then((value) {
-        Get.back();
+        Navigator.pop(context);
+
         return;
       }),
     );

@@ -11,7 +11,6 @@ import 'package:Beepo/widgets/toast.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
@@ -42,6 +41,7 @@ class _PinCodeState extends State<PinCode> {
   TextEditingController otp = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -69,7 +69,9 @@ class _PinCodeState extends State<PinCode> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              widget.isSignedUp ? "Enter pin to access your account" : "Create a PIN to protect your\ndata and transactions",
+              widget.isSignedUp
+                  ? "Enter pin to access your account"
+                  : "Create a PIN to protect your\ndata and transactions",
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: secondaryColor,
@@ -85,7 +87,7 @@ class _PinCodeState extends State<PinCode> {
             ),
             const SizedBox(height: 70),
             SizedBox(
-              width: Get.size.width * 0.6,
+              width: size.width * 0.6,
               child: PinCodeTextField(
                 appContext: context,
                 keyboardType: TextInputType.number,
@@ -120,22 +122,29 @@ class _PinCodeState extends State<PinCode> {
                 if (otp.text.length == 4) {
                   if (widget.isSignedUp == false) {
                     if (widget.image != null) {
-                      Get.to(
-                        () => VerifyCode(
-                          mnemonic: widget.mnemonic,
-                          name: widget.name!,
-                          image: widget.image!,
-                          pin: otp.text,
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => VerifyCode(
+                            mnemonic: widget.mnemonic,
+                            name: widget.name!,
+                            image: widget.image!,
+                            pin: otp.text,
+                          ),
                         ),
                       );
                     }
                     if (widget.data != null) {
-                      Get.to(
-                        () => VerifyCode(
-                          image: base64Decode(widget.data!['response']['image']),
-                          pin: otp.text,
-                          data: widget.data,
-                          name: widget.data!['response']['image'],
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => VerifyCode(
+                            image:
+                                base64Decode(widget.data!['response']['image']),
+                            pin: otp.text,
+                            data: widget.data,
+                            name: widget.data!['response']['image'],
+                          ),
                         ),
                       );
                     }
@@ -146,16 +155,20 @@ class _PinCodeState extends State<PinCode> {
                       return;
                     }
 
-                    final walletProvider = Provider.of<WalletProvider>(context, listen: false);
-                    final accountProvider = Provider.of<AccountProvider>(context, listen: false);
+                    final walletProvider =
+                        Provider.of<WalletProvider>(context, listen: false);
+                    final accountProvider =
+                        Provider.of<AccountProvider>(context, listen: false);
                     // final xmtpProvider = Provider.of<XMTPProvider>(context, listen: false);
 
                     await walletProvider.initWalletState(response);
                     // await xmtpProvider.initClientFromKey();
                     await accountProvider.initAccountState();
-
-                    Get.to(
-                      () => const BottomNavHome(),
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const BottomNavHome(),
+                      ),
                     );
                   }
                 } else {

@@ -10,10 +10,11 @@ import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 
 class PhraseConfirmationScreen extends StatefulWidget {
-  const PhraseConfirmationScreen({Key? key}) : super(key: key);
+  const PhraseConfirmationScreen({super.key});
 
   @override
-  State<PhraseConfirmationScreen> createState() => _PhraseConfirmationScreenState();
+  State<PhraseConfirmationScreen> createState() =>
+      _PhraseConfirmationScreenState();
 }
 
 class _PhraseConfirmationScreenState extends State<PhraseConfirmationScreen> {
@@ -124,8 +125,16 @@ class _PhraseConfirmationScreenState extends State<PhraseConfirmationScreen> {
               BeepoFilledButtons(
                 text: "Proceed",
                 onPressed: () {
-                  if (value1 == true && value2 == true && value3 == true && value4 == true) {
-                    Get.to(() => const WalletPhraseScreen());
+                  if (value1 == true &&
+                      value2 == true &&
+                      value3 == true &&
+                      value4 == true) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const WalletPhraseScreen(),
+                      ),
+                    );
                   } else {
                     showToast('Kindly select all aptions!');
                   }

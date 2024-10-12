@@ -1,13 +1,8 @@
 import 'package:Beepo/constants/constants.dart';
-import 'package:Beepo/providers/wallet_provider.dart';
-import 'package:Beepo/screens/profile/profile_screen.dart';
-import 'package:Beepo/screens/wallet/phrase_confirm_screen.dart';
 import 'package:Beepo/widgets/app_text.dart';
-import 'package:Beepo/widgets/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class About extends StatefulWidget {
@@ -17,15 +12,14 @@ class About extends StatefulWidget {
   State<About> createState() => _AboutState();
 }
 
-class _AboutState extends State<About> { 
-
+class _AboutState extends State<About> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            Get.back();
+            Navigator.pop(context);
           },
           icon: const Icon(
             Icons.arrow_back,
@@ -66,7 +60,8 @@ class _AboutState extends State<About> {
               SizedBox(height: 10.h),
               GestureDetector(
                   onTap: () async {
-                    final Uri url = Uri.parse('https://beepo.gitbook.io/terms-of-use/');
+                    final Uri url =
+                        Uri.parse('https://beepo.gitbook.io/terms-of-use/');
                     if (!await launchUrl(url)) {
                       throw Exception('Could not launch $url');
                     }

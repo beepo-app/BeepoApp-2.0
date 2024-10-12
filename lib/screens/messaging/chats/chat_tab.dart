@@ -42,7 +42,12 @@ class _ChatTabState extends State<ChatTab> {
           HawkFabMenuItem(
             label: 'New Chat',
             ontap: () {
-              Get.to(() => const SearchScreen());
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SearchScreen(),
+                ),
+              );
             },
             icon: const Icon(
               Icons.add,
@@ -133,7 +138,8 @@ class Chat extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<xmtp.Conversation>? conversations = context.watch<ChatProvider>().convos;
+    List<xmtp.Conversation>? conversations =
+        context.watch<ChatProvider>().convos;
     List<xmtp.DecodedMessage>? msgs = context.watch<ChatProvider>().messages;
 
     // var conversations = useConversationList();
@@ -222,7 +228,8 @@ class Chat extends HookWidget {
           return Container();
         }
 
-        Map? d = users?.toList().firstWhereOrNull((element) => element['ethAddress'] == convos[index]['address']);
+        Map? d = users?.toList().firstWhereOrNull(
+            (element) => element['ethAddress'] == convos[index]['address']);
 
         return ConversationListItem(
           topic: convos[index]['lastMessage'].topic,
@@ -242,7 +249,13 @@ class ConversationListItem extends HookWidget {
   final Map? userData;
   final xmtp.DecodedMessage? lastMessage;
 
-  ConversationListItem({Key? key, required this.sender, required this.topic, this.userData, this.lastMessage}) : super(key: Key(topic));
+  ConversationListItem(
+      {Key? key,
+      required this.sender,
+      required this.topic,
+      this.userData,
+      this.lastMessage})
+      : super(key: Key(topic));
 
   @override
   Widget build(BuildContext context) {
@@ -260,7 +273,9 @@ class ConversationListItem extends HookWidget {
           ? Container(
               height: 50,
               width: 50,
-              decoration: BoxDecoration(color: ColorUtils.stringToColor(senderAddress), borderRadius: BorderRadius.circular(100)),
+              decoration: BoxDecoration(
+                  color: ColorUtils.stringToColor(senderAddress),
+                  borderRadius: BorderRadius.circular(100)),
               child: Center(
                 child: Text(
                   senderAddress.substring(0, 2),
@@ -274,7 +289,8 @@ class ConversationListItem extends HookWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(100),
                 child: Image(
-                  image: CacheMemoryImageProvider(userData!['image'], base64Decode(userData!['image'])),
+                  image: CacheMemoryImageProvider(
+                      userData!['image'], base64Decode(userData!['image'])),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -312,7 +328,9 @@ class ConversationListItem extends HookWidget {
         children: [
           Expanded(
               child: Text(
-            content.contains("inChatTxChat-BeepoV2") ? "In Chat Tx" : content.toString(),
+            content.contains("inChatTxChat-BeepoV2")
+                ? "In Chat Tx"
+                : content.toString(),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           )),
@@ -333,11 +351,14 @@ class ConversationListItem extends HookWidget {
       onTap: () {
         List<xmtp.DecodedMessage>? msgs = chatProvider.messages;
         if (msgs != null) {
-          Get.to(
-            () => ChatDmScreen(
-              topic: topic,
-              userData: userData,
-              senderAddress: userData?['ethAdress'] ?? senderAddress,
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ChatDmScreen(
+                topic: topic,
+                userData: userData,
+                senderAddress: userData?['ethAdress'] ?? senderAddress,
+              ),
             ),
           );
         }

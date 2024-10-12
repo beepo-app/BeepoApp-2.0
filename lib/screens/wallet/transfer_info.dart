@@ -12,8 +12,7 @@ import 'package:url_launcher/url_launcher.dart';
 class TransferInfo extends StatelessWidget {
   final String? walletTicker;
   final Map? data;
-  const TransferInfo({Key? key, this.walletTicker, this.data})
-      : super(key: key);
+  const TransferInfo({super.key, this.walletTicker, this.data});
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +48,7 @@ class TransferInfo extends StatelessWidget {
                                   color: Colors.white,
                                 ),
                                 onPressed: () {
-                                  Get.back();
+                                  Navigator.pop(context);
                                 }),
                             AppText(
                               text: "Transaction Details",

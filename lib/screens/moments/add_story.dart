@@ -51,11 +51,13 @@ class _AddStoryState extends State<AddStory> {
             img.copyResize(image, width: width, height: height);
         List<int> compressedBytes = img.encodeJpg(resizedImage, quality: 65);
         beepoPrint(compressedBytes.length / 1024);
-
-        Get.to(
-          () => BlankScreen(
-            cam: widget.controller,
-            compressedBytes: compressedBytes,
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BlankScreen(
+              cam: widget.controller,
+              compressedBytes: compressedBytes,
+            ),
           ),
         );
       } catch (e) {
@@ -136,11 +138,13 @@ class _AddStoryState extends State<AddStory> {
                                     List<int> compressedBytes = img
                                         .encodeJpg(resizedImage, quality: 75);
                                     beepoPrint(compressedBytes.length / 1024);
-
-                                    Get.to(
-                                      () => BlankScreen(
-                                        cam: widget.controller,
-                                        compressedBytes: compressedBytes,
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => BlankScreen(
+                                          cam: widget.controller,
+                                          compressedBytes: compressedBytes,
+                                        ),
                                       ),
                                     );
                                   } catch (e) {
@@ -178,12 +182,13 @@ class _AddStoryState extends State<AddStory> {
                             ),
                             GestureDetector(
                               onTap: () {
-                                Get.back(
-                                    result: widget.controller.description
-                                                .lensDirection ==
-                                            CameraLensDirection.front
-                                        ? true
-                                        : false);
+                                Navigator.pop(
+                                  context,
+                                  widget.controller.description.lensDirection ==
+                                          CameraLensDirection.front
+                                      ? true
+                                      : false,
+                                );
                               },
                               child: SvgPicture.asset('assets/Rotate.svg'),
                             ),

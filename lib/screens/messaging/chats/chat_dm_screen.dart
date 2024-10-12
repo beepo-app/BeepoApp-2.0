@@ -15,7 +15,6 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:string_to_color/string_to_color.dart';
@@ -27,7 +26,9 @@ class ChatDmScreen extends StatefulHookWidget {
   final String topic;
   final String? senderAddress;
   final Map? userData;
-  ChatDmScreen({Key? key, this.senderAddress, this.userData, required this.topic}) : super(key: Key(topic));
+  ChatDmScreen(
+      {Key? key, this.senderAddress, this.userData, required this.topic})
+      : super(key: Key(topic));
 
   @override
   State<ChatDmScreen> createState() => _ChatDmScreenState();
@@ -132,14 +133,20 @@ class _ChatDmScreenState extends State<ChatDmScreen> {
             TextButton(
               onPressed: () {
                 if (userData != null) {
-                  Get.to(() => UserProfileScreen(user: userData));
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => UserProfileScreen(user: userData),
+                    ),
+                  );
                 }
               },
               child: Row(
                 children: [
                   noBeepoAcct
                       ? CircleAvatar(
-                          backgroundColor: ColorUtils.stringToColor(widget.senderAddress!),
+                          backgroundColor:
+                              ColorUtils.stringToColor(widget.senderAddress!),
                           child: Text(
                             widget.senderAddress!.substring(0, 2),
                             style: const TextStyle(color: Colors.white),
@@ -151,7 +158,8 @@ class _ChatDmScreenState extends State<ChatDmScreen> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(100),
                             child: Image(
-                              image: CacheMemoryImageProvider(userData['image'], base64Decode(userData['image'])),
+                              image: CacheMemoryImageProvider(userData['image'],
+                                  base64Decode(userData['image'])),
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -162,7 +170,10 @@ class _ChatDmScreenState extends State<ChatDmScreen> {
                           '${widget.senderAddress!.substring(0, 3)}...${widget.senderAddress!.substring(widget.senderAddress!.length - 7, widget.senderAddress!.length)}',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(fontSize: 14, color: AppColors.white, fontWeight: FontWeight.w500),
+                          style: const TextStyle(
+                              fontSize: 14,
+                              color: AppColors.white,
+                              fontWeight: FontWeight.w500),
                         )
                       : Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -210,15 +221,20 @@ class _ChatDmScreenState extends State<ChatDmScreen> {
               // Using LayoutBuilder to get the maxHeight for ListView.
               child: LayoutBuilder(
                 builder: (context, constrains) {
-                  List<DecodedMessage>? msgs = context.watch<ChatProvider>().messages;
+                  List<DecodedMessage>? msgs =
+                      context.watch<ChatProvider>().messages;
                   if (msgs == null || msgs.isEmpty) {
                     return const Text('no messages yet');
                   }
 
-                  List messages = msgs.where((element) => element.topic == topic).toList();
+                  List messages =
+                      msgs.where((element) => element.topic == topic).toList();
                   int length = messages.length;
 
-                  final isShrinkWrap = _singleMessageHeight! * length > constrains.maxHeight ? false : true;
+                  final isShrinkWrap =
+                      _singleMessageHeight! * length > constrains.maxHeight
+                          ? false
+                          : true;
 
                   return ListView.builder(
                     controller: _scrollController,
@@ -229,15 +245,22 @@ class _ChatDmScreenState extends State<ChatDmScreen> {
                     reverse: true,
                     itemBuilder: (context, index) {
                       DecodedMessage message = messages[index];
-                      final isFirstInSection = index == length - 1 ? true : message.sender != messages[index + 1].sender;
-                      final isFirstInDate = index == length - 1 ? true : !message.sentAt.isSameDate(messages[index + 1].sentAt);
+                      final isFirstInSection = index == length - 1
+                          ? true
+                          : message.sender != messages[index + 1].sender;
+                      final isFirstInDate = index == length - 1
+                          ? true
+                          : !message.sentAt
+                              .isSameDate(messages[index + 1].sentAt);
 
-                      bool isMe = widget.senderAddress.toString() != message.sender.toString();
+                      bool isMe = widget.senderAddress.toString() !=
+                          message.sender.toString();
 
                       return Column(
                         children: [
                           // Message date
-                          if (isFirstInDate) _DateTimeItem(date: message.sentAt),
+                          if (isFirstInDate)
+                            _DateTimeItem(date: message.sentAt),
                           MessageBox(
                             message: message.content.toString(),
                             isMe: isMe,
@@ -260,7 +283,9 @@ class _ChatDmScreenState extends State<ChatDmScreen> {
                 return Align(
                   alignment: Alignment.bottomRight,
                   child: Padding(
-                    padding: Theme.of(context).platform.isMobile ? const EdgeInsets.only(right: 10, bottom: 3) : const EdgeInsets.all(15),
+                    padding: Theme.of(context).platform.isMobile
+                        ? const EdgeInsets.only(right: 10, bottom: 3)
+                        : const EdgeInsets.all(15),
                     child: AnimatedSwitcher(
                       duration: const Duration(milliseconds: 150),
                       switchInCurve: Curves.easeInOut,
@@ -309,12 +334,14 @@ class _ChatDmScreenState extends State<ChatDmScreen> {
                         borderRadius: BorderRadius.all(Radius.circular(14)),
                       ),
                       child: TextField(
-                        onSubmitted: (value) => canSend.value ? submitHandler : null,
+                        onSubmitted: (value) =>
+                            canSend.value ? submitHandler : null,
                         style: const TextStyle(fontSize: 16),
                         controller: input,
                         decoration: InputDecoration(
                           hintText: 'Message',
-                          hintStyle: const TextStyle(color: Color(0xff697077), fontSize: 15),
+                          hintStyle: const TextStyle(
+                              color: Color(0xff697077), fontSize: 15),
                           prefixIcon: input.text.isEmpty
                               ? IconButton(
                                   onPressed: () {
@@ -328,7 +355,15 @@ class _ChatDmScreenState extends State<ChatDmScreen> {
                           suffixIcon: input.text.isEmpty
                               ? IconButton(
                                   onPressed: () {
-                                    inchatTxBox(context, (userData ?? {"displayName": widget.senderAddress!, "ethAddress": widget.senderAddress!}));
+                                    inchatTxBox(
+                                        context,
+                                        (userData ??
+                                            {
+                                              "displayName":
+                                                  widget.senderAddress!,
+                                              "ethAddress":
+                                                  widget.senderAddress!
+                                            }));
                                     // context
                                     //     .read<ChatNotifier>()
                                     //     .cameraUploadImageChat(widget.model.uid);
@@ -489,11 +524,15 @@ class _GotoBottomButton extends StatelessWidget {
         child: GestureDetector(
           onTap: onTap,
           child: ColoredBox(
-            color: Theme.of(context).brightness == Brightness.light ? Colors.white : AppColors.secondaryColor,
+            color: Theme.of(context).brightness == Brightness.light
+                ? Colors.white
+                : AppColors.secondaryColor,
             child: Padding(
               padding: const EdgeInsets.all(6),
               child: Icon(
-                isMobile ? Icons.keyboard_double_arrow_down : Icons.keyboard_arrow_down,
+                isMobile
+                    ? Icons.keyboard_double_arrow_down
+                    : Icons.keyboard_arrow_down,
                 size: isMobile ? 22 : 30,
                 color: AppColors.secondaryColor,
               ),
@@ -539,11 +578,13 @@ class MessageBubble extends StatelessWidget {
     final messageText = message;
     final timeText = sentAt;
 
-    final timeTextWidth = textWidth(timeText, timeTextStyle) + (isMe ? 20.0 : 6);
+    final timeTextWidth =
+        textWidth(timeText, timeTextStyle) + (isMe ? 20.0 : 6);
     final messageTextWidth = textWidth(messageText, messageTextStyle);
     final whiteSpaceWidth = textWidth(' ', messageTextStyle);
     // More space on desktop (+8)
-    final extraSpaceCount = ((timeTextWidth / whiteSpaceWidth).round()) + (isMobile ? 2 : 8);
+    final extraSpaceCount =
+        ((timeTextWidth / whiteSpaceWidth).round()) + (isMobile ? 2 : 8);
     final extraSpace = '${' ' * extraSpaceCount}\u202f';
     final extraSpaceWidth = textWidth(extraSpace, messageTextStyle);
 
@@ -559,14 +600,18 @@ class MessageBubble extends StatelessWidget {
             const padding = 8.0;
             final maxWidth = constrains.maxWidth - (padding * 2);
 
-            final isTimeInSameLine = messageTextWidth + extraSpaceWidth < maxWidth || messageTextWidth > maxWidth;
+            final isTimeInSameLine =
+                messageTextWidth + extraSpaceWidth < maxWidth ||
+                    messageTextWidth > maxWidth;
 
             if (messageText.contains("inChatTxChat-BeepoV2")) {
-              final walletProvider = Provider.of<WalletProvider>(context, listen: false);
+              final walletProvider =
+                  Provider.of<WalletProvider>(context, listen: false);
               var decodedText = jsonDecode(messageText);
 
               return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -578,7 +623,10 @@ class MessageBubble extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(5.0),
                         child: Text(
-                          decodedText['sender'] == walletProvider.ethAddress.toString() ? "You Sent" : "You Received",
+                          decodedText['sender'] ==
+                                  walletProvider.ethAddress.toString()
+                              ? "You Sent"
+                              : "You Received",
                           style: messageTextStyle,
                         ),
                       ),
