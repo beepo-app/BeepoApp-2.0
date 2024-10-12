@@ -27,10 +27,8 @@ class _TransferSuccessState extends State<TransferSuccess> {
     final walletProvider = Provider.of<WalletProvider>(context, listen: false);
     walletProvider.getAssets();
 
-    return WillPopScope(
-      onWillPop: () async {
-        return false;
-      },
+    return PopScope(
+      canPop: false,
       child: Scaffold(
         backgroundColor: AppColors.backgroundGrey,
         appBar: AppBar(

@@ -111,7 +111,7 @@ class BrowserContainer3 extends StatelessWidget {
               color: const Color(0xff40D6E1),
               borderRadius: BorderRadius.circular(10),
               boxShadow: const [
-                const BoxShadow(
+                BoxShadow(
                   color: Color(0x3f000000),
                   blurRadius: 8,
                   offset: Offset(0, 2),
@@ -143,7 +143,7 @@ class BrowserContainer4 extends StatelessWidget {
   final String? image;
   final String? title;
 
-  const BrowserContainer4({Key? key, this.image, this.title}) : super(key: key);
+  const BrowserContainer4({super.key, this.image, this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -158,8 +158,8 @@ class BrowserContainer4 extends StatelessWidget {
             decoration: BoxDecoration(
               color: const Color(0xff2081E2),
               borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                const BoxShadow(
+              boxShadow: const [
+                BoxShadow(
                   color: Color(0x3f000000),
                   blurRadius: 8,
                   offset: Offset(0, 2),

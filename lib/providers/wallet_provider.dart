@@ -267,52 +267,51 @@ class WalletProvider extends ChangeNotifier {
   }
 
   watchTxs() async {
-    return;
+    if (assets == null || assets!.isEmpty) return; // Exit early if no assets
+
     try {
-      if (assets == null || assets!.isEmpty) return;
       List? localTxs = await Hive.box('Beepo2.0').get('txs');
 
-      var res = assets!.map((asset) async {
+      List txs = [];
+
+      // Fetch transactions for each asset
+      for (var asset in assets!) {
         var type = asset['native'] ? 'EVM' : 'TOKEN';
         var data = await getTxs(asset['chainID'], type);
-        return ({
-          "ticker": asset['ticker'],
-          'data': data['data'] != null && data['data'].isEmpty
-              ? []
-              : data['data'][0]
-        });
-      });
 
-      var txs = (await Future.wait(res));
+        txs.add({
+          "ticker": asset['ticker'],
+          'data': data['data'] != null && data['data'].isNotEmpty
+              ? data['data'][0]
+              : {}
+        });
+      }
+
+      bool updateData = false;
 
       if (txs.isNotEmpty) {
-        bool updateData = false;
-
         if (localTxs != null) {
           for (var tx in localTxs) {
-            beepoPrint('tx');
-            beepoPrint(tx);
-            beepoPrint('tx');
-            Map curAsset =
-                txs.firstWhere((element) => element['ticker'] == tx['ticker']);
-            beepoPrint(curAsset);
-            if (curAsset.isNotEmpty &&
-                (tx['data']["timestamp"] < curAsset['data']["timestamp"])) {
-              beepoPrint('true');
-              beepoPrint('true 22');
-              beepoPrint('true');
-              beepoPrint('true 222');
-              beepoPrint('true');
-              beepoPrint('true 22');
-              beepoPrint('true');
-              updateData = true;
+            var curAsset = txs.firstWhere(
+                (element) => element['ticker'] == tx['ticker'],
+                orElse: () => null);
+
+            // Compare timestamps if curAsset exists and has data
+            if (curAsset != null &&
+                curAsset['data'].isNotEmpty &&
+                tx['data']["timestamp"] < curAsset['data']["timestamp"]) {
               sendWalletNotification(curAsset);
+              updateData = true;
             }
           }
+        } else {
+          // If no local transactions exist, update the data
+          updateData = true;
         }
 
         if (updateData || localTxs == null) {
-          await Hive.box('Beepo2.0').put('txs', txs);
+          await Hive.box('Beepo2.0')
+              .put('txs', txs); // Save the new transactions
         }
       }
     } catch (error) {
