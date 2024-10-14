@@ -6,7 +6,6 @@ import 'package:hive/hive.dart';
 import 'package:mongo_dart/mongo_dart.dart' as mongo;
 
 class TotalPointProvider extends ChangeNotifier {
-
   int totalPoints = 0;
   final NewPointsProvider pointsProvider;
   final ReferralProvider referralProvider;
@@ -19,7 +18,7 @@ class TotalPointProvider extends ChangeNotifier {
   }) {
     loadRankFromLocal();
   }
-  
+
   MapEntry<String, IconData> rankEntry = const MapEntry('', Icons.error);
 
   void resetPoints() {
@@ -101,7 +100,7 @@ class TotalPointProvider extends ChangeNotifier {
         upsert: true,
       );
     } catch (e) {
-      print('Error saving rank to database: $e');
+      debugPrint('Error saving rank to database: $e');
     } finally {
       await db.close();
     }

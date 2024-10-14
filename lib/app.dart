@@ -13,6 +13,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:xmtp/xmtp.dart' as xmtp;
+import 'package:get/get.dart';
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});

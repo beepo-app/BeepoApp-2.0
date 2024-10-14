@@ -8,7 +8,6 @@ import 'package:Beepo/screens/profile/user_profile_security_screen.dart';
 import 'package:Beepo/widgets/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 //import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';

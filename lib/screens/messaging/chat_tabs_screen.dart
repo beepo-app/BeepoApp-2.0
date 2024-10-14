@@ -5,7 +5,6 @@ import 'package:Beepo/providers/account_provider.dart';
 import 'package:Beepo/providers/chat_provider.dart';
 // import 'package:Beepo/screens/messaging/calls/calls_tab.dart';
 import 'package:Beepo/screens/messaging/chats/chat_tab.dart';
-import 'package:Beepo/screens/messaging/chats/request.dart';
 // import 'package:Beepo/screens/messaging/chats/search_users_screen.dart';
 import 'package:Beepo/screens/moments/blank_status_screen.dart';
 import 'package:Beepo/screens/moments/init_camera.dart';

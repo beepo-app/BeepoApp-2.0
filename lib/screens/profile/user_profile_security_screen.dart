@@ -7,7 +7,6 @@ import 'package:Beepo/screens/wallet/phrase_confirm_screen.dart';
 import 'package:Beepo/widgets/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 

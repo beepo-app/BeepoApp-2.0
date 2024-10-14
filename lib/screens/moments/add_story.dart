@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:camera/camera.dart';
-import 'package:get/get.dart';
 import '../../widgets/app_text.dart';
 import 'package:image/image.dart' as img;
 

@@ -448,7 +448,7 @@ Future<void> dbClaimDailyPoints(int points, String ethAddress) async {
       await box.put('ethAddress', ethAddress);
       await box.put('points', points);
     } catch (e) {
-      print(e);
+      debugPrint("E$e");
     }
     return;
   }
@@ -462,15 +462,14 @@ Future<void> dbClaimDailyPoints(int points, String ethAddress) async {
     try {
       await pointsCollection.replaceOne(
           where.eq("ethAddress", ethAddress), data);
-      print('Daily points claimed successfully!');
+      debugPrint('Daily points claimed successfully!');
     } catch (e) {
-      print(e);
+      debugPrint("E$e");
     }
   } else {
-    print("Please come back later!");
+    debugPrint("Please come back later!");
   }
 }
-
 
 dbWithdrawPoints(String ethAddress) async {
   Db db = await Db.create(
@@ -607,7 +606,7 @@ Future<Map<String, dynamic>> dbUpdateReferrals(String refId) async {
         'referrals': 1,
       });
     } catch (e) {
-      print(e);
+      debugPrint("E $e");
       return {"error": e.toString()};
     }
   } else {
@@ -619,7 +618,7 @@ Future<Map<String, dynamic>> dbUpdateReferrals(String refId) async {
       await pointsCollection.replaceOne(
           where.eq("ethAddress", ethAddress), pointsData);
     } catch (e) {
-      print(e);
+      debugPrint("E $e");
       return {"error": e.toString()};
     }
   }
@@ -642,7 +641,7 @@ Future<Map<String, dynamic>?> dbFetchReferrals(String ethAddress) async {
         await pointsCollection.findOne(where.eq('ethAddress', ethAddress));
     return data;
   } catch (e) {
-    print("Error fetching referrals: $e");
+    debugPrint("Error fetching referrals: $e");
     return null;
   } finally {
     await db.close();
@@ -672,7 +671,7 @@ Future<void> dbUpdateTimeBasedPoints(String ethAddress, int timeSpent) async {
         'timeSpent': 0, // Time spent in seconds
       });
     } catch (e) {
-      print("Error creating initial points data: $e");
+      debugPrint("Error creating initial points data: $e");
       return;
     }
   } else {
@@ -693,7 +692,7 @@ Future<void> dbUpdateTimeBasedPoints(String ethAddress, int timeSpent) async {
       await pointsCollection.replaceOne(
           where.eq('ethAddress', ethAddress), pointsData);
     } catch (e) {
-      print("Error updating points data: $e");
+      debugPrint("Error updating points data: $e");
     }
   }
 }
@@ -719,7 +718,7 @@ Future<void> dbAwardTweetPoints(String ethAddress, int points) async {
         'points': points,
       });
     } catch (e) {
-      print("Error creating points data: $e");
+      debugPrint("Error creating points data: $e");
       return;
     }
   } else {
@@ -729,7 +728,7 @@ Future<void> dbAwardTweetPoints(String ethAddress, int points) async {
       await pointsCollection.replaceOne(
           where.eq('ethAddress', ethAddress), pointsData);
     } catch (e) {
-      print("Error updating points data: $e");
+      debugPrint("Error updating points data: $e");
     }
   }
   await db.close();

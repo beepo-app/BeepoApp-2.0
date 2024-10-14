@@ -1,10 +1,8 @@
 import 'dart:async';
 import 'dart:typed_data';
-
 import 'package:Beepo/screens/moments/status_view.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-import 'package:get/get.dart';
 
 class BlankScreen extends StatefulWidget {
   final List<int> compressedBytes;

@@ -4,7 +4,7 @@ class BrowserContainer extends StatelessWidget {
   final String? image;
   final String? title;
 
-  const BrowserContainer({Key? key, this.image, this.title}) : super(key: key);
+  const BrowserContainer({super.key, this.image, this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +50,7 @@ class BrowserContainer2 extends StatelessWidget {
   final String? image;
   final String? title;
 
-  const BrowserContainer2({Key? key, this.image, this.title}) : super(key: key);
+  const BrowserContainer2({super.key, this.image, this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +95,7 @@ class BrowserContainer3 extends StatelessWidget {
   final String? image;
   final String? title;
 
-  const BrowserContainer3({Key? key, this.image, this.title}) : super(key: key);
+  const BrowserContainer3({super.key, this.image, this.title});
 
   @override
   Widget build(BuildContext context) {

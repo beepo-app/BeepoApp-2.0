@@ -10,11 +10,11 @@ import 'package:Beepo/providers/withdraw_points_provider.dart';
 import 'package:Beepo/services/notification_service.dart';
 import 'package:Beepo/utils/encrypted_seed.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'session/foreground_session.dart';
 
 void main() async {
@@ -29,7 +29,7 @@ void main() async {
   try {
     await Hive.openBox('beepo2.0');
   } catch (e) {
-    print('Failed to open Hive box: $e');
+    debugPrint('Failed to open Hive box: $e');
     // Consider clearing or migrating data if necessary
   }
 

@@ -1,10 +1,7 @@
-import 'package:Beepo/components/browser_container.dart';
 import 'package:Beepo/constants/constants.dart';
-import 'package:Beepo/widgets/Beepo_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import '../../Utils/styles.dart';
 
 class Browser extends StatefulWidget {
   const Browser({Key? key}) : super(key: key);
@@ -135,22 +132,26 @@ class _BrowserState extends State<Browser> {
                   },
                   cursorColor: const Color(0xff0e014c),
                   decoration: InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 15.w),
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 10.h, horizontal: 15.w),
                     fillColor: AppColors.backgroundGrey,
                     border: OutlineInputBorder(
-                      borderSide: const BorderSide(color: Colors.grey, width: 0.0),
+                      borderSide:
+                          const BorderSide(color: Colors.grey, width: 0.0),
                       borderRadius: BorderRadius.all(
                         Radius.circular(10.r),
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(color: Colors.grey, width: 0.0),
+                      borderSide:
+                          const BorderSide(color: Colors.grey, width: 0.0),
                       borderRadius: BorderRadius.all(
                         Radius.circular(10.r),
                       ),
                     ),
                     enabledBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(color: Colors.grey, width: 0.0),
+                      borderSide:
+                          const BorderSide(color: Colors.grey, width: 0.0),
                       borderRadius: BorderRadius.all(
                         Radius.circular(10.r),
                       ),

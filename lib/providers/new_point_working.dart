@@ -87,7 +87,7 @@ class NewPointsProvider with ChangeNotifier {
 
       notifyListeners();
     } else {
-      print("Cannot claim points now, please come back later.");
+      debugPrint("Cannot claim points now, please come back later.");
     }
   }
 }

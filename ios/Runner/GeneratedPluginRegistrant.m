@@ -102,10 +102,10 @@
 @import sqlite3_flutter_libs;
 #endif
 
-#if __has_include(<uni_links/UniLinksPlugin.h>)
-#import <uni_links/UniLinksPlugin.h>
+#if __has_include(<uni_links2/UniLinksPlugin.h>)
+#import <uni_links2/UniLinksPlugin.h>
 #else
-@import uni_links;
+@import uni_links2;
 #endif
 
 #if __has_include(<url_launcher_ios/URLLauncherPlugin.h>)

@@ -4,7 +4,6 @@ import 'package:Beepo/widgets/app_text.dart';
 import 'package:Beepo/widgets/Beepo_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 
 class SendAssetsScreen extends StatefulWidget {
   final List<dynamic> assets_;

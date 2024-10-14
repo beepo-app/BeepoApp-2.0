@@ -85,5 +85,5 @@ flutter {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.20"
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.2.2'
-    implementation 'org.torusresearch:web3auth-android-sdk:4.0.8'
+    implementation 'com.github.Web3Auth:web3auth-android-sdk:8.0.3'
 } 

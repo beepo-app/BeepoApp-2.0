@@ -37,7 +37,7 @@ class ReferralProvider with ChangeNotifier {
         box.put('points', _points);
       }
     } catch (e) {
-      print("Error fetching referrals: $e");
+      debugPrint("Error fetching referrals: $e");
       // Handle the error appropriately, e.g., set an error state
     } finally {
       notifyListeners();
@@ -64,7 +64,7 @@ class ReferralProvider with ChangeNotifier {
 
       notifyListeners();
     } else {
-      print(result['error']);
+      debugPrint(result['error']);
     }
   }
 }
