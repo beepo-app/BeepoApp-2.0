@@ -1,4 +1,5 @@
 import 'package:Beepo/app.dart';
+import 'package:Beepo/firebase_options.dart';
 import 'package:Beepo/providers/account_provider.dart';
 import 'package:Beepo/providers/chat_provider.dart';
 import 'package:Beepo/providers/new_point_working.dart';
@@ -9,6 +10,7 @@ import 'package:Beepo/providers/wallet_provider.dart';
 import 'package:Beepo/providers/withdraw_points_provider.dart';
 import 'package:Beepo/services/notification_service.dart';
 import 'package:Beepo/utils/encrypted_seed.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -19,6 +21,9 @@ import 'session/foreground_session.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   await NotificationService.initializeNotification();
 

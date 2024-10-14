@@ -10,7 +10,6 @@ import 'package:Beepo/widgets/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -91,53 +90,54 @@ class SignUp extends StatelessWidget {
                 icon: SvgPicture.asset('assets/google.svg'),
                 text: 'Continue with Google',
                 onPressed: () async {
-                  List? users = Hive.box('Beepo2.0').get('allUsers');
+                  try {
+                    // Show a loading dialog while we authenticate the user
+                    loadingDialog("Authenticating with Google...");
 
-                  // await accountProvider.getAllUsers();
-                  await walletProvider.initPlatformState();
-                  Map? res = await walletProvider.web3AuthLogin();
+                    // Initialize platform state (wallet or app-specific logic)
+                    await walletProvider.initPlatformState();
 
-                  // ignore: unnecessary_null_comparison
-                  if (res != null && res['error'] == null) {
-                    loadingDialog("Checking Info!");
+                    // Perform Web3Auth login
+                    Map<String, dynamic>? res =
+                        await walletProvider.web3AuthLogin();
 
-                    users = Hive.box('Beepo2.0').get('allUsers');
-                    if (users == null) {
-                      Future.delayed(const Duration(seconds: 5));
-                    }
-
-                    users = Hive.box('Beepo2.0').get('allUsers');
-                    if (users == null) {
-                      Future.delayed(const Duration(seconds: 5));
-                      await accountProvider.getAllUsers();
-                    }
-
-                    users = Hive.box('Beepo2.0').get('allUsers');
-                    if (users == null) {
-                      Future.delayed(const Duration(seconds: 5));
-                    }
-
-                    users = Hive.box('Beepo2.0').get('allUsers');
-                    if (users == null) {
-                      Future.delayed(const Duration(seconds: 5));
-                    }
-
-                    users = Hive.box('Beepo2.0').get('allUsers');
-                    if (users == null) {
-                      Future.delayed(const Duration(seconds: 5));
-                      Navigator.pop(context);
-                      showToast("An error Occured, Please Try Again!");
+                    // If there's an error in the response, stop the process
+                    if (res == null || res['error'] != null) {
+                      Navigator.pop(context); // Close the loading dialog
+                      showToast("Login failed, please try again!");
                       return;
                     }
 
-                    await walletProvider.initMPCWalletState(res);
-                    if (walletProvider.ethAddress != null) {
-                      // users = await Hive.box('Beepo2.0').get('allUsers');
-                      var newRes = users.firstWhereOrNull((e) =>
-                          e['ethAddress'] ==
-                          walletProvider.ethAddress.toString());
+                    // Now proceed to fetch users from Hive
+                    var users = Hive.box('Beepo2.0').get('allUsers');
 
-                      if (newRes == null) {
+                    // If users are not available, wait and retry fetching them
+                    if (users == null) {
+                      loadingDialog("Fetching user data...");
+                      await Future.delayed(const Duration(seconds: 3));
+                      await accountProvider.getAllUsers();
+
+                      users = Hive.box('Beepo2.0').get('allUsers');
+                      if (users == null) {
+                        Navigator.pop(context); // Close the dialog
+                        showToast(
+                            "Unable to retrieve user data. Please try again.");
+                        return;
+                      }
+                    }
+
+                    // Initialize wallet with the MPC response
+                    await walletProvider.initMPCWalletState(res);
+
+                    // If the wallet was initialized and there's an Ethereum address
+                    if (walletProvider.ethAddress != null) {
+                      var user = users.firstWhereOrNull(
+                        (e) =>
+                            e['ethAddress'] ==
+                            walletProvider.ethAddress.toString(),
+                      );
+
+                      if (user == null) {
                         Navigator.pop(context);
                         Navigator.push(
                           context,
@@ -145,26 +145,29 @@ class SignUp extends StatelessWidget {
                             builder: (context) => const CreateAccountScreen(),
                           ),
                         );
-
                         return;
                       }
                       Navigator.pop(context);
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => PinCode(
-                              data: {'response': newRes, 'mpc': res},
-                              isSignedUp: false,
-                            ),
-                          ));
-
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PinCode(
+                            data: {'response': user, 'mpc': res},
+                            isSignedUp: false,
+                          ),
+                        ),
+                      );
                       return;
+                    } else {
+                      Navigator.pop(context);
+                      showToast("Wallet initialization failed.");
                     }
-                    return;
+                  } catch (e) {
+                    Navigator.pop(context);
+                    showToast("An error occurred: $e");
                   }
-                  showToast("An error Occured, Please Try Again!");
                 },
-              ),
+              )
               // SizedBox(height: 80.h),
             ],
           ),

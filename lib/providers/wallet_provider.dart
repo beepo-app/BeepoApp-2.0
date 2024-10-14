@@ -471,16 +471,36 @@ class WalletProvider extends ChangeNotifier {
     );
   }
 
-  Future<Map> web3AuthLogin() async {
+  // Future<Map> web3AuthLogin() async {
+  //   try {
+  //     final Web3AuthResponse response = await Web3AuthFlutter.login(LoginParams(
+  //         loginProvider: Provider.google,
+  //         extraLoginOptions: ExtraLoginOptions(login_hint: 'Beepo')));
+  //     mpcResponse = response;
+  //     beepoPrint(response);
+  //     return response.toJson();
+  //   } catch (e) {
+  //     return {'error': e};
+  //   }
+  // }
+
+  Future<Map<String, dynamic>> web3AuthLogin() async {
     try {
       final Web3AuthResponse response = await Web3AuthFlutter.login(LoginParams(
-          loginProvider: Provider.google,
-          extraLoginOptions: ExtraLoginOptions(login_hint: 'Beepo')));
+        loginProvider: Provider.google,
+        extraLoginOptions: ExtraLoginOptions(login_hint: 'Beepo'),
+      ));
+
+      // Log the response for debugging
+      beepoPrint("RESPONSE AUTH:$response");
+
+      // Store the response globally for later use
       mpcResponse = response;
-      beepoPrint(response);
+
       return response.toJson();
     } catch (e) {
-      return {'error': e};
+      beepoPrint('Error during login: $e');
+      return {'error': e.toString()};
     }
   }
 }

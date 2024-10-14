@@ -1,0 +1,1 @@
+{"flutter":{"platforms":{"android":{"default":{"projectId":"beepo-v2","appId":"1:74902736666:android:4204fd2e0e2cb89d35e6a3","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"beepo-v2","configurations":{"android":"1:74902736666:android:4204fd2e0e2cb89d35e6a3","ios":"1:74902736666:ios:3d60a221e954fa9635e6a3"}}}}}}
