@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:Beepo/app.dart';
 import 'package:Beepo/networks/erc20.dart';
 import 'package:Beepo/networks/networks.dart';
+import 'package:Beepo/services/alchemy_service.dart';
 import 'package:Beepo/utils/logger.dart';
 import 'package:Beepo/widgets/toast.dart';
 import 'package:decimal/decimal.dart';
@@ -40,17 +41,16 @@ class WalletProvider extends ChangeNotifier {
 
   // final StreamController<void> _periodicController = StreamController<void>();
 
-  String startPeriodicUpdates() {
+  Timer startPeriodicUpdates() {
     const duration = Duration(seconds: 30);
-    Stream.periodic(duration, (_) => null).listen((_) async {
+    return Timer.periodic(duration, (_) async {
       try {
         await getAssets();
-        await watchTxs().then((value) {});
+        await watchTxs();
       } catch (error) {
-        beepoPrint("Error in periodicUpdates: $error");
+        debugPrint("PeriodicUpdates: $error");
       }
     });
-    return '';
   }
 
   String generateMnemonic() {
@@ -74,6 +74,7 @@ class WalletProvider extends ChangeNotifier {
     try {
       final address = EthPrivateKey.fromHex(data['privKey']).address;
       ethPrivateKey = data['privKey'];
+      debugPrint("PRIVATE KEY:$ethPrivateKey");
       ethAddress = address;
       await getAssets();
       startPeriodicUpdates();
@@ -118,8 +119,9 @@ class WalletProvider extends ChangeNotifier {
     ethAddress = address;
   }
 
-  Future getAssets() async {
+  Future<List> getAssets() async {
     Map<String, dynamic> networks = networkInfo;
+    final alchemyService = AlchemyService();
 
     try {
       List data = [];
@@ -128,29 +130,34 @@ class WalletProvider extends ChangeNotifier {
       List prices = await getPrices();
 
       Map<Object, Map<String, Object>> allNetworks = networks['networksInfo'];
-      Map<Object, Map<String, Object>> rpcUrls = networks['rpcUrls'];
 
       List<Future> futures = [];
 
-      (allNetworks.forEach((key, value) {
+      allNetworks.forEach((key, value) {
         double? bal = 0.0;
-        String rpcLink = '';
         bool native = false;
-
         String address = ethAddress!.toString();
 
-        getData() async {
-          if (rpcUrls[key] != null) {
-            rpcLink = rpcUrls[key]!['testnet'].toString();
-            bal = await getNativeETHBalances(rpcLink, ethAddress);
+        Future<void> getData() async {
+          // Handle different network types
+          if (value['isNative'] == true) {
+            // For native token balances
+            bal = await alchemyService.getNativeBalance(
+              address,
+              value['network'].toString(),
+            );
             native = true;
           } else if (key == 'Bitcoin') {
+            // Bitcoin handling remains unchanged
             address = btcAddress!;
             bal = await getBTCBalance(ethAddress);
           } else {
-            Map<String, dynamic>? rpc = value;
-            rpcLink = rpc['rpc']['testnet'];
-            bal = await getERC20Balance(value['address'], rpcLink);
+            // For ERC20 tokens
+            bal = await alchemyService.getTokenBalance(
+              value['address'].toString(),
+              address,
+              value['network'].toString(),
+            );
           }
 
           totalBal = totalBal + (bal ?? 0);
@@ -167,7 +174,6 @@ class WalletProvider extends ChangeNotifier {
             'nativeTicker': value['nativeTicker'],
             'bal': bal == null ? '0' : bal!.toStringAsFixed(2),
             'chainID': value['chainId'],
-            'rpc': rpcLink,
             'native': native,
             'address': address,
             'contractAddress': value['address'],
@@ -194,7 +200,7 @@ class WalletProvider extends ChangeNotifier {
 
         Future<void> future = getData();
         futures.add(future);
-      }));
+      });
 
       await Future.wait(futures);
       assets = data;
@@ -202,7 +208,29 @@ class WalletProvider extends ChangeNotifier {
 
       return data;
     } catch (e) {
-      beepoPrint({"error 120": e});
+      beepoPrint({"error": e.toString()});
+      return [];
+    }
+  }
+
+// Helper function to validate RPC endpoint
+  Future<bool> isRPCValid(String rpcUrl) async {
+    try {
+      final response = await http.post(
+        Uri.parse(rpcUrl),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(
+            {'jsonrpc': '2.0', 'method': 'net_version', 'params': [], 'id': 1}),
+      );
+
+      if (response.statusCode == 200) {
+        final body = json.decode(response.body);
+        return body['result'] != null && !response.body.contains('deprecated');
+      }
+      return false;
+    } catch (e) {
+      print('RPC validation error: $e');
+      return false;
     }
   }
 
@@ -254,14 +282,17 @@ class WalletProvider extends ChangeNotifier {
       var url = Uri.parse(
           "https://get-transactions.vercel.app/api/getTxs?address=$ethAddress&chainID=$chainID&type=$type");
       var response = await http.get(url);
-      beepoPrint(response.body);
+      debugPrint("GET TXS CHAINID:$chainID");
+      debugPrint("GET TXS URL:$url");
+      debugPrint("GET TXS TYPE:$type");
+      debugPrint("GET TXS RESPONSE:$response");
       if (response.statusCode == 200) {
         Map res = json.decode(response.body);
         return res;
       }
       return {};
     } catch (e) {
-      beepoPrint({"error   getPrices": e});
+      debugPrint("GET TXS ERROR:$e");
       return {};
     }
   }

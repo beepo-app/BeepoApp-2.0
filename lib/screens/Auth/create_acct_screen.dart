@@ -30,7 +30,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
         leading: IconButton(
           icon: const Icon(Iconsax.arrow_left),
           //size: 30.0,
-          onPressed: () {},
+          onPressed: () => Navigator.pop(context),
         ),
         foregroundColor: Colors.black,
         title: const Text(

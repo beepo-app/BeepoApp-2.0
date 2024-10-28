@@ -183,7 +183,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       loadingDialog('Updating Profile ..');
                       Map userdata = await accountProvider.updateUser(
                           base64Encode(selectedImage ?? widget.imageBytes),
-                          accountProvider.db,
+                          // accountProvider.db,
                           displayName.text,
                           bio.text,
                           userName.text);

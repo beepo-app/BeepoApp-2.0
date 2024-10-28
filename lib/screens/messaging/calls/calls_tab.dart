@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CallTab extends StatelessWidget {
-  CallTab({Key? key}) : super(key: key);
+  CallTab({super.key});
 
   bool callRecieved = true;
 
@@ -95,7 +95,8 @@ class CallTab extends StatelessWidget {
                         ),
                         Icon(
                           Icons.phone_callback,
-                          color: callRecieved == true ? Colors.red : Colors.green,
+                          color:
+                              callRecieved == true ? Colors.red : Colors.green,
                           size: 20,
                         ),
                       ],

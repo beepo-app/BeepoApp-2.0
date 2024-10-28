@@ -2,6 +2,7 @@ import 'package:Beepo/app.dart';
 import 'package:Beepo/firebase_options.dart';
 import 'package:Beepo/providers/account_provider.dart';
 import 'package:Beepo/providers/chat_provider.dart';
+import 'package:Beepo/providers/google_sign_provider.dart';
 import 'package:Beepo/providers/new_point_working.dart';
 import 'package:Beepo/providers/referral_provider.dart';
 import 'package:Beepo/providers/time_base_provider.dart';
@@ -25,6 +26,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  // await accountProvider.initDB();
   await NotificationService.initializeNotification();
 
   await Hive.initFlutter();
@@ -46,9 +48,11 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
+        // ChangeNotifierProvider.value(value: accountProvider),
         ChangeNotifierProvider(create: (_) => WalletProvider()),
         ChangeNotifierProvider(create: (_) => ChatProvider()),
         ChangeNotifierProvider(create: (_) => AccountProvider()),
+        ChangeNotifierProvider(create: (_) => GoogleSignProvider()),
         ChangeNotifierProvider(
           create: (context) => TotalPointProvider(
             pointsProvider: context.read<NewPointsProvider>(),

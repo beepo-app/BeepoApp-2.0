@@ -180,8 +180,9 @@ class _UserProfileSecurityScreenState extends State<UserProfileSecurityScreen> {
                                                 context,
                                                 listen: false);
 
-                                        await accountProvider
-                                            .deleteUser(accountProvider.db);
+                                        await accountProvider.deleteUser(
+                                            //accountProvider.db
+                                            );
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(

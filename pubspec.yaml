@@ -57,7 +57,7 @@ dependencies:
   intl: ^0.19.0
   encrypt: ^5.0.3
   aes_crypt_null_safe: ^3.0.0
-  mongo_dart: any
+  mongo_dart: ^0.10.3
   wallet: ^0.0.13
   flutter_hooks:
   ethereum_addresses: ^1.0.2
@@ -92,10 +92,12 @@ dependencies:
   local_auth: ^2.3.0
   webview_flutter: ^4.10.0
   share_plus: ^10.0.3
+  alchemy_web3: ^0.0.1
   
   #FIREBASE
   firebase_core: ^3.6.0
   firebase_auth: ^5.3.1
+  cloud_firestore: ^5.4.4
   google_sign_in: ^6.2.1
 
 dev_dependencies:

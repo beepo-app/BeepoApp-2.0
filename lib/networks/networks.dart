@@ -54,7 +54,8 @@ var networkInfo = {
       'description': 'The first EVM based blockchain network',
       'derivationPath': "m/44'/60'/0'/0",
       'isTestnet': false,
-      'logoUrl': 'https://res.cloudinary.com/dwruvre6o/image/upload/v1697100571/usdt_jiebah.png',
+      'logoUrl':
+          'https://res.cloudinary.com/dwruvre6o/image/upload/v1697100571/usdt_jiebah.png',
       'nameoncoinmarketcap': 'tether',
     },
     // 'MTK': {
@@ -85,7 +86,8 @@ var networkInfo = {
       'ticker': 'BNB',
       'nativeTicker': 'BNB',
       "native": true,
-      'description': 'The centralized  EVM based smart blockchain network with low transaction fees',
+      'description':
+          'The centralized  EVM based smart blockchain network with low transaction fees',
       'derivationPath': "m/44'/60'/0'/0",
       'isTestNet': false,
       'logoUrl': 'https://Beepo.blob.core.windows.net/logos/Smartchain.png',
@@ -102,7 +104,8 @@ var networkInfo = {
       'description': 'This is the Polygon matic description',
       'derivationPath': "m/44'/60'/0'/0",
       'isTestNet': false,
-      'logoUrl': 'https://res.cloudinary.com/dwruvre6o/image/upload/v1704047296/whatishela_g3574d.png',
+      'logoUrl':
+          'https://res.cloudinary.com/dwruvre6o/image/upload/v1704047296/whatishela_g3574d.png',
       'nameoncoinmarketcap': 'matic-network',
     },
     137: {
@@ -190,7 +193,8 @@ var networkInfo = {
       'description': 'The Beepo network',
       'derivationPath': "m/44'/60'/0'/0",
       'isTestNet': false,
-      'logoUrl': 'https://res.cloudinary.com/dwruvre6o/image/upload/v1701096455/icon_cownk2.png',
+      'logoUrl':
+          'https://res.cloudinary.com/dwruvre6o/image/upload/v1701096455/icon_cownk2.png',
       'nameoncoinmarketcap': 'tether',
     },
   },
@@ -198,7 +202,8 @@ var networkInfo = {
   'rpcUrls': {
     11155111: {
       'https': 'https://eth-pokt.nodies.app',
-      'testnet': 'https://eth-sepolia.g.alchemy.com/v2/HDQnQBbyr2HtgKSym1OqrbGED_H7Ev2N',
+      'testnet':
+          'https://eth-sepolia.g.alchemy.com/v2/HDQnQBbyr2HtgKSym1OqrbGED_H7Ev2N',
       'wss': '',
     },
     5: {
@@ -211,9 +216,21 @@ var networkInfo = {
       'testnet': 'https://testnet-rpc.helachain.com',
       'wss': '',
     },
-    56: {'https': 'https://bsc-dataseed.binance.org/', 'testnet': 'https://data-seed-prebsc-1-s1.binance.org:8545/', 'wss': ""},
-    42220: {'https': "https://forno.celo.org", 'testnet': "https://alfajores-forno.celo-testnet.org", 'wss': "wss://forno.celo.org/ws"},
-    137: {'https': "https://polygon-rpc.com", 'testnet': "https://rpc-mumbai.maticvigil.com", 'wss': ""},
+    56: {
+      'https': 'https://bsc-dataseed.binance.org/',
+      'testnet': 'https://data-seed-prebsc-1-s1.binance.org:8545/',
+      'wss': ""
+    },
+    42220: {
+      'https': "https://forno.celo.org",
+      'testnet': "https://alfajores-forno.celo-testnet.org",
+      'wss': "wss://forno.celo.org/ws"
+    },
+    137: {
+      'https': "https://polygon-rpc.com",
+      'testnet': "https://rpc-mumbai.maticvigil.com",
+      'wss': ""
+    },
     256256: {
       'https': "https://mainnet.block.caduceus.foundation",
       'testnet': "https://galaxy.block.caduceus.foundation",
@@ -239,9 +256,29 @@ var networkInfo = {
     256256: {'contractAddress': "0x07686C0BA221f2427BB95B88ee8A94E784022ed0"}
   },
 
-  'supportedNetworkIds': [1, 5, 56, 42220, 137, 256256, 32520, "bitcoin", "Beepo"],
+  'supportedNetworkIds': [
+    1,
+    5,
+    56,
+    42220,
+    137,
+    256256,
+    32520,
+    "bitcoin",
+    "Beepo"
+  ],
 
-  'supportedNetworkNames': ['bitcoin', 'bitgert', 'ethereum', 'smartchainMainnet', 'smartchainTestnet', 'celo', 'polygon', 'caduceus', 'Beepo'],
+  'supportedNetworkNames': [
+    'bitcoin',
+    'bitgert',
+    'ethereum',
+    'smartchainMainnet',
+    'smartchainTestnet',
+    'celo',
+    'polygon',
+    'caduceus',
+    'Beepo'
+  ],
 
   'networkNameMap': {
     'ethereumMainnet': 1,
@@ -253,7 +290,15 @@ var networkInfo = {
     'bitgert': 32520
   },
 
-  'networkNames': ['ethereum', 'bsc', 'bscTestnet', 'matic', 'mumbai', 'sepolia', 'goerli'],
+  'networkNames': [
+    'ethereum',
+    'bsc',
+    'bscTestnet',
+    'matic',
+    'mumbai',
+    'sepolia',
+    'goerli'
+  ],
 
   'explorerUrls': {
     1: "https://etherscan.io",
@@ -265,3 +310,51 @@ var networkInfo = {
     32520: "https://explorer.bitgert.com",
   },
 };
+
+
+
+
+// final Map<String, dynamic> networkInfo = {
+//   'networksInfo': {
+//     'Ethereum': {
+//       'displayName': 'Ethereum',
+//       'logoUrl': 'assets/images/eth_logo.png',
+//       'ticker': 'ETH',
+//       'nativeTicker': 'ETH',
+//       'address': '', // Empty for native token
+//       'chainId': '1',
+//       'network': 'mainnet', // This will be used by Alchemy
+//       'isNative': true,
+//     },
+//     'USDT': {
+//       'displayName': 'Tether USD',
+//       'logoUrl': 'assets/images/usdt_logo.png',
+//       'ticker': 'USDT',
+//       'nativeTicker': 'USDT',
+//       'address': '0xdac17f958d2ee523a2206206994597c13d831ec7', // USDT contract address
+//       'chainId': '1',
+//       'network': 'mainnet',
+//       'isNative': false,
+//     },
+//     'Polygon': {
+//       'displayName': 'Polygon',
+//       'logoUrl': 'assets/images/matic_logo.png',
+//       'ticker': 'MATIC',
+//       'nativeTicker': 'MATIC',
+//       'address': '',
+//       'chainId': '137',
+//       'network': 'polygon-mainnet', // Polygon network in Alchemy
+//       'isNative': true,
+//     },
+//     'Bitcoin': {
+//       'displayName': 'Bitcoin',
+//       'logoUrl': 'assets/images/btc_logo.png',
+//       'ticker': 'BTC',
+//       'nativeTicker': 'BTC',
+//       'chainId': null, // Bitcoin doesn't use chainId
+//       'network': 'bitcoin',
+//       'isNative': true,
+//     },
+//     // Add more networks/tokens as needed
+//   }
+// };

@@ -119,6 +119,7 @@ class _PinCodeState extends State<PinCode> {
             BeepoFilledButtons(
               text: 'Continue',
               onPressed: () async {
+                debugPrint("ENTER1");
                 if (otp.text.length == 4) {
                   if (widget.isSignedUp == false) {
                     if (widget.image != null) {
@@ -134,6 +135,7 @@ class _PinCodeState extends State<PinCode> {
                         ),
                       );
                     }
+                    debugPrint("ENTER2");
                     if (widget.data != null) {
                       Navigator.push(
                         context,
@@ -148,22 +150,27 @@ class _PinCodeState extends State<PinCode> {
                         ),
                       );
                     }
+                    debugPrint("ENTER3");
                   } else {
+                    debugPrint("ENTER4");
                     String response = await login(otp.text);
                     if (response.contains("Incorrect Pin Entered")) {
                       showToast("Incorrect Pin Entered");
                       return;
                     }
-
+                    debugPrint("CALLED1");
                     final walletProvider =
                         Provider.of<WalletProvider>(context, listen: false);
+                    debugPrint("CALLED2");
                     final accountProvider =
                         Provider.of<AccountProvider>(context, listen: false);
+                    debugPrint("CALLED3");
                     // final xmtpProvider = Provider.of<XMTPProvider>(context, listen: false);
-
                     await walletProvider.initWalletState(response);
+                    debugPrint("CALLED4");
                     // await xmtpProvider.initClientFromKey();
                     await accountProvider.initAccountState();
+                    debugPrint("CALLED5");
                     Navigator.push(
                       context,
                       MaterialPageRoute(

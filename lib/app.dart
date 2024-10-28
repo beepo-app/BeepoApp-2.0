@@ -3,10 +3,11 @@ import 'dart:convert';
 import 'package:Beepo/providers/account_provider.dart';
 import 'package:Beepo/providers/chat_provider.dart';
 import 'package:Beepo/providers/wallet_provider.dart';
+import 'package:Beepo/screens/Auth/create_acct_screen.dart';
 import 'package:Beepo/screens/Auth/lock_screen.dart';
-import 'package:Beepo/screens/auth/onboarding_screen.dart';
 import 'package:Beepo/services/notification_service.dart';
 import 'package:Beepo/utils/logger.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -80,11 +81,15 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         acctProvider.getAllUsers(),
       ]);
 
-      chatProvider.findAndWatchAllStatuses(acctProvider.db).listen((event) {
+      chatProvider
+          .findAndWatchAllStatuses(FirebaseFirestore.instance)
+          .listen((event) {
         chatProvider.saveStatuses(acctProvider.db);
       });
 
-      acctProvider.findAndWatchAllUsers(acctProvider.db).listen((event) async {
+      acctProvider
+          .findAndWatchAllUsers(FirebaseFirestore.instance)
+          .listen((event) async {
         await acctProvider.getAllUsers();
       });
     } catch (e) {
@@ -104,11 +109,12 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           theme: ThemeData(
             useMaterial3: true,
           ),
-          home: isSignedUp == null
-              ? const OnboardingScreen()
-              : isSignedUp!
-                  ? const LockScreen()
-                  : const OnboardingScreen(),
+          home: CreateAccountScreen(),
+          // isSignedUp == null
+          //     ? const OnboardingScreen()
+          //     : isSignedUp!
+          //         ? const LockScreen()
+          //         : const OnboardingScreen(),
         );
       },
       designSize: const Size(360, 546),

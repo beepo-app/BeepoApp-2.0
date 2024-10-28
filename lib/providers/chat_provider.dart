@@ -4,9 +4,9 @@ import 'package:Beepo/services/database.dart';
 import 'package:Beepo/session/foreground_session.dart';
 import 'package:Beepo/utils/logger.dart';
 import 'package:async/async.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:mongo_dart/mongo_dart.dart';
 import 'package:xmtp/xmtp.dart';
 
 class ChatProvider extends ChangeNotifier {
@@ -100,7 +100,7 @@ class ChatProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Stream<dynamic> findAndWatchAllStatuses(Db? db) {
+  Stream<dynamic> findAndWatchAllStatuses(FirebaseFirestore db) {
     if (db != null) {
       beepoPrint('hiiiii   2');
       return _useLookupStream(

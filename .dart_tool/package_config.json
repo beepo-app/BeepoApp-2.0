@@ -26,6 +26,12 @@
       "languageVersion": "3.3"
     },
     {
+      "name": "alchemy_web3",
+      "rootUri": "file:///C:/Users/Favour%20Williams/AppData/Local/Pub/Cache/hosted/pub.dev/alchemy_web3-0.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.16"
+    },
+    {
       "name": "analyzer",
       "rootUri": "file:///C:/Users/Favour%20Williams/AppData/Local/Pub/Cache/hosted/pub.dev/analyzer-6.7.0",
       "packageUri": "lib/",
@@ -236,6 +242,24 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "cloud_firestore",
+      "rootUri": "file:///C:/Users/Favour%20Williams/AppData/Local/Pub/Cache/hosted/pub.dev/cloud_firestore-5.4.4",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
+      "name": "cloud_firestore_platform_interface",
+      "rootUri": "file:///C:/Users/Favour%20Williams/AppData/Local/Pub/Cache/hosted/pub.dev/cloud_firestore_platform_interface-6.4.3",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
+      "name": "cloud_firestore_web",
+      "rootUri": "file:///C:/Users/Favour%20Williams/AppData/Local/Pub/Cache/hosted/pub.dev/cloud_firestore_web-4.3.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
+    },
+    {
       "name": "code_builder",
       "rootUri": "file:///C:/Users/Favour%20Williams/AppData/Local/Pub/Cache/hosted/pub.dev/code_builder-4.10.0",
       "packageUri": "lib/",
@@ -246,6 +270,12 @@
       "rootUri": "file:///C:/Users/Favour%20Williams/AppData/Local/Pub/Cache/hosted/pub.dev/collection-1.18.0",
       "packageUri": "lib/",
       "languageVersion": "2.18"
+    },
+    {
+      "name": "console_mixin",
+      "rootUri": "file:///C:/Users/Favour%20Williams/AppData/Local/Pub/Cache/hosted/pub.dev/console_mixin-0.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.16"
     },
     {
       "name": "convert",
@@ -308,6 +338,12 @@
       "languageVersion": "2.14"
     },
     {
+      "name": "dio",
+      "rootUri": "file:///C:/Users/Favour%20Williams/AppData/Local/Pub/Cache/hosted/pub.dev/dio-4.0.6",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "drift",
       "rootUri": "file:///C:/Users/Favour%20Williams/AppData/Local/Pub/Cache/hosted/pub.dev/drift-2.20.3",
       "packageUri": "lib/",
@@ -334,6 +370,12 @@
     {
       "name": "eip55",
       "rootUri": "file:///C:/Users/Favour%20Williams/AppData/Local/Pub/Cache/hosted/pub.dev/eip55-1.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "either_dart",
+      "rootUri": "file:///C:/Users/Favour%20Williams/AppData/Local/Pub/Cache/hosted/pub.dev/either_dart-0.1.4",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -852,6 +894,12 @@
       "rootUri": "file:///C:/Users/Favour%20Williams/AppData/Local/Pub/Cache/hosted/pub.dev/local_auth_windows-1.0.11",
       "packageUri": "lib/",
       "languageVersion": "3.2"
+    },
+    {
+      "name": "logger",
+      "rootUri": "file:///C:/Users/Favour%20Williams/AppData/Local/Pub/Cache/hosted/pub.dev/logger-1.4.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
     },
     {
       "name": "logging",
@@ -1490,16 +1538,10 @@
       "languageVersion": "2.12"
     },
     {
-      "name": "web_socket",
-      "rootUri": "file:///C:/Users/Favour%20Williams/AppData/Local/Pub/Cache/hosted/pub.dev/web_socket-0.1.6",
-      "packageUri": "lib/",
-      "languageVersion": "3.3"
-    },
-    {
       "name": "web_socket_channel",
-      "rootUri": "file:///C:/Users/Favour%20Williams/AppData/Local/Pub/Cache/hosted/pub.dev/web_socket_channel-3.0.1",
+      "rootUri": "file:///C:/Users/Favour%20Williams/AppData/Local/Pub/Cache/hosted/pub.dev/web_socket_channel-2.4.0",
       "packageUri": "lib/",
-      "languageVersion": "3.3"
+      "languageVersion": "2.15"
     },
     {
       "name": "webview_flutter",
@@ -1568,7 +1610,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2024-10-14T09:22:50.377893Z",
+  "generated": "2024-10-28T10:45:12.807706Z",
   "generator": "pub",
   "generatorVersion": "3.5.3",
   "flutterRoot": "file:///C:/src/flutter",
