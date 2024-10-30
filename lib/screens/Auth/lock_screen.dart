@@ -10,6 +10,7 @@ import 'package:Beepo/utils/logger.dart';
 import 'package:Beepo/widgets/commons.dart';
 import 'package:Beepo/widgets/toast.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -95,10 +96,7 @@ class _LockScreenState extends State<LockScreen> {
 
       Future.delayed(const Duration(seconds: 3));
       Hive.box('Beepo2.0').put('isLocked', false);
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const BottomNavHome()),
-      );
+      Get.to(() => const BottomNavHome());
 
       return;
     }
@@ -110,15 +108,11 @@ class _LockScreenState extends State<LockScreen> {
     if (session.initialized == false) {
       await session.authorize(credentials.asSigner());
     }
-    //await session.authorize(credentials.asSigner());
     await accountProvider.initAccountState();
     var ds = await chatProvider.getAllStatus(accountProvider.db);
     beepoPrint(ds);
     Hive.box('Beepo2.0').put('isLocked', false);
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const BottomNavHome()),
-    );
+    Get.to(() => const BottomNavHome());
   }
 
   @override

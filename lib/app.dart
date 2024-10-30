@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:Beepo/providers/account_provider.dart';
 import 'package:Beepo/providers/chat_provider.dart';
 import 'package:Beepo/providers/wallet_provider.dart';
-import 'package:Beepo/screens/Auth/create_acct_screen.dart';
 import 'package:Beepo/screens/Auth/lock_screen.dart';
+import 'package:Beepo/screens/Auth/onboarding_screen.dart';
 import 'package:Beepo/services/notification_service.dart';
 import 'package:Beepo/utils/logger.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -109,12 +109,11 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           theme: ThemeData(
             useMaterial3: true,
           ),
-          home: CreateAccountScreen(),
-          // isSignedUp == null
-          //     ? const OnboardingScreen()
-          //     : isSignedUp!
-          //         ? const LockScreen()
-          //         : const OnboardingScreen(),
+          home: isSignedUp == null
+              ? const OnboardingScreen()
+              : isSignedUp!
+                  ? const LockScreen()
+                  : const OnboardingScreen(),
         );
       },
       designSize: const Size(360, 546),

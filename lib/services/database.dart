@@ -2,10 +2,12 @@ import 'dart:math';
 import 'package:Beepo/session/foreground_session.dart';
 import 'package:Beepo/utils/logger.dart';
 import 'package:Beepo/widgets/toast.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart' as firebase;
 import 'package:encrypt/encrypt.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:web3dart/web3dart.dart';
 
@@ -57,15 +59,16 @@ import 'package:web3dart/web3dart.dart';
 // }
 
 Future<void> dbCreateUser(
-  String image,
+  Uint8List base64Image,
   String displayName,
   String ethAddress,
   String? btcAddress,
-  Encrypted encrypteData,
+  Encrypted encryptedData,
 ) async {
   try {
     // Access Firestore instance directly
-    final FirebaseFirestore db = FirebaseFirestore.instance;
+    final firebase.FirebaseFirestore db = firebase.FirebaseFirestore.instance;
+    final FirebaseStorage storage = FirebaseStorage.instance;
 
     // Generate base username from displayName
     final String baseUsername = displayName.replaceAll(' ', '_');
@@ -88,13 +91,18 @@ Future<void> dbCreateUser(
       }
     }
 
+    // Upload the image to Cloud Storage
+    final storageRef = storage.ref('user_images/$username.jpg');
+    await storageRef.putData(base64Image);
+    final imageUrl = await storageRef.getDownloadURL();
+
     // Prepare the data to send to Firestore
     Map<String, dynamic> userData = {
       'username': username,
       'displayName': displayName,
       'ethAddress': ethAddress,
-      'image': image,
-      'createdAt': FieldValue.serverTimestamp(),
+      'imageUrl': imageUrl,
+      'createdAt': firebase.FieldValue.serverTimestamp(),
     };
 
     // Only add btcAddress if it's not null
@@ -110,8 +118,8 @@ Future<void> dbCreateUser(
     // Store user data in Hive for local persistence
     final box = Hive.box('Beepo2.0');
     await Future.wait([
-      box.put('encryptedSeedPhrase', encrypteData.base64),
-      box.put('base64Image', image),
+      box.put('encryptedSeedPhrase', encryptedData.base64),
+      box.put('imageUrl', imageUrl),
       box.put('ethAddress', ethAddress),
       if (btcAddress != null) box.put('btcAddress', btcAddress),
       box.put('displayName', displayName),
@@ -148,15 +156,15 @@ Future<void> dbCreateUser(
 //   return StreamGroup.mergeBroadcast([update, insert]);
 // }
 
-Stream<Map<String, dynamic>> dbWatchTx(FirebaseFirestore db) {
-  CollectionReference statusCollection = db.collection('status');
+Stream<Map<String, dynamic>> dbWatchTx(firebase.FirebaseFirestore db) {
+  firebase.CollectionReference statusCollection = db.collection('status');
 
   return statusCollection.snapshots().asyncExpand((snapshot) {
     // Filter for 'added' and 'modified' document changes only
     return Stream.fromIterable(
       snapshot.docChanges.where((change) =>
-          change.type == DocumentChangeType.added ||
-          change.type == DocumentChangeType.modified),
+          change.type == firebase.DocumentChangeType.added ||
+          change.type == firebase.DocumentChangeType.modified),
     ).map((change) => change.doc.data() as Map<String, dynamic>);
   });
 }
@@ -183,28 +191,29 @@ Stream<Map<String, dynamic>> dbWatchTx(FirebaseFirestore db) {
 //   return StreamGroup.mergeBroadcast([update, insert]);
 // }
 
-Stream<Map<String, dynamic>> dbWatchAllStatus(FirebaseFirestore db) {
+Stream<Map<String, dynamic>> dbWatchAllStatus(firebase.FirebaseFirestore db) {
   // Reference the 'status' collection in Firestore
-  CollectionReference statusCollection = db.collection('status');
+  firebase.CollectionReference statusCollection = db.collection('status');
 
   // Listen to changes in the 'status' collection
   return statusCollection.snapshots().asyncExpand((snapshot) {
     // Filter only for 'added' and 'modified' document changes
     return Stream.fromIterable(
       snapshot.docChanges.where((change) =>
-          change.type == DocumentChangeType.added ||
-          change.type == DocumentChangeType.modified),
+          change.type == firebase.DocumentChangeType.added ||
+          change.type == firebase.DocumentChangeType.modified),
     ).map((change) => change.doc.data() as Map<String, dynamic>);
   });
 }
 
-Future<List<Map<String, dynamic>>> dbGetAllStatus(FirebaseFirestore db) async {
+Future<List<Map<String, dynamic>>> dbGetAllStatus(
+    firebase.FirebaseFirestore db) async {
   // Reference the 'status' collection in Firestore
-  CollectionReference statusCollection = db.collection('status');
+  firebase.CollectionReference statusCollection = db.collection('status');
 
   try {
     // Query for documents where 'expireAt' is less than the current time
-    QuerySnapshot querySnapshot = await statusCollection
+    firebase.QuerySnapshot querySnapshot = await statusCollection
         .where('expireAt', isLessThan: DateTime.now())
         .get();
 
@@ -237,12 +246,13 @@ Future<List<Map<String, dynamic>>> dbGetAllStatus(FirebaseFirestore db) async {
 //   }).toList();
 // }
 
-Future<List<Map<String, dynamic>>> dbGetAllPoints(FirebaseFirestore db) async {
-  CollectionReference pointsCollection = db.collection('points');
+Future<List<Map<String, dynamic>>> dbGetAllPoints(
+    firebase.FirebaseFirestore db) async {
+  firebase.CollectionReference pointsCollection = db.collection('points');
 
   try {
     // Query documents where 'expireAt' is less than the current date and time
-    QuerySnapshot querySnapshot = await pointsCollection
+    firebase.QuerySnapshot querySnapshot = await pointsCollection
         .where("expireAt", isLessThan: DateTime.now())
         .get();
 
@@ -285,19 +295,19 @@ Future<List<Map<String, dynamic>>> dbGetAllPoints(FirebaseFirestore db) async {
 //   }
 // }
 
-Future<void> dbDeleteStatus(
-    FirebaseFirestore db, List<dynamic>? newData, String ethAddress) async {
-  CollectionReference statusCollection = db.collection('status');
+Future<void> dbDeleteStatus(firebase.FirebaseFirestore db,
+    List<dynamic>? newData, String ethAddress) async {
+  firebase.CollectionReference statusCollection = db.collection('status');
 
   try {
     // Query for the document with the matching ethAddress
-    QuerySnapshot querySnapshot = await statusCollection
+    firebase.QuerySnapshot querySnapshot = await statusCollection
         .where("ethAddress", isEqualTo: ethAddress)
         .limit(1)
         .get();
 
     if (querySnapshot.docs.isNotEmpty) {
-      DocumentReference docRef = querySnapshot.docs.first.reference;
+      firebase.DocumentReference docRef = querySnapshot.docs.first.reference;
 
       // If newData has 1 or fewer items, delete the document
       if (newData == null || newData.length <= 1) {
@@ -345,21 +355,21 @@ Future<void> dbDeleteStatus(
 //   }
 // }
 
-Future<void> dbAutoDeleteStatus(FirebaseFirestore db,
+Future<void> dbAutoDeleteStatus(firebase.FirebaseFirestore db,
     Map<String, dynamic>? newData, String ethAddress) async {
   // Reference the 'status' collection in Firestore
-  CollectionReference statusCollection = db.collection('status');
+  firebase.CollectionReference statusCollection = db.collection('status');
 
   try {
     // Query the document with matching ethAddress
-    QuerySnapshot querySnapshot = await statusCollection
+    firebase.QuerySnapshot querySnapshot = await statusCollection
         .where('ethAddress', isEqualTo: ethAddress)
         .limit(1)
         .get();
 
     // Check if the document exists
     if (querySnapshot.docs.isNotEmpty) {
-      DocumentReference docRef = querySnapshot.docs.first.reference;
+      firebase.DocumentReference docRef = querySnapshot.docs.first.reference;
 
       // If newData has 1 or fewer items, delete the document
       if (newData == null || newData.length <= 1) {
@@ -409,19 +419,19 @@ Future<void> dbAutoDeleteStatus(FirebaseFirestore db,
 //   }
 // }
 
-Future<void> dbUpdateStatusViewsCount(FirebaseFirestore db, String id,
+Future<void> dbUpdateStatusViewsCount(firebase.FirebaseFirestore db, String id,
     String ethAddress, String viewerAddress) async {
-  CollectionReference statusCollection = db.collection('status');
+  firebase.CollectionReference statusCollection = db.collection('status');
 
   try {
     // Query the document with the specified ethAddress
-    QuerySnapshot querySnapshot = await statusCollection
+    firebase.QuerySnapshot querySnapshot = await statusCollection
         .where('ethAddress', isEqualTo: ethAddress)
         .limit(1)
         .get();
 
     if (querySnapshot.docs.isNotEmpty) {
-      DocumentReference docRef = querySnapshot.docs.first.reference;
+      firebase.DocumentReference docRef = querySnapshot.docs.first.reference;
       Map<String, dynamic> data =
           querySnapshot.docs.first.data() as Map<String, dynamic>;
 
@@ -429,7 +439,7 @@ Future<void> dbUpdateStatusViewsCount(FirebaseFirestore db, String id,
       List<dynamic> viewers = data['viewers'] ?? [];
       if (!viewers.contains(viewerAddress)) {
         await docRef.update({
-          'viewers': FieldValue.arrayUnion([viewerAddress])
+          'viewers': firebase.FieldValue.arrayUnion([viewerAddress])
         });
       }
     } else {
@@ -516,16 +526,16 @@ Future<void> dbUpdateStatusViewsCount(FirebaseFirestore db, String id,
 
 Future<void> dbUploadStatus(
   String image,
-  FirebaseFirestore db,
+  firebase.FirebaseFirestore db,
   String message,
   String privacy,
   String ethAddress,
 ) async {
-  CollectionReference statusCollection = db.collection('status');
+  firebase.CollectionReference statusCollection = db.collection('status');
 
   try {
     // Query for an existing document with the specified ethAddress
-    QuerySnapshot querySnapshot = await statusCollection
+    firebase.QuerySnapshot querySnapshot = await statusCollection
         .where('ethAddress', isEqualTo: ethAddress)
         .limit(1)
         .get();
@@ -553,7 +563,7 @@ Future<void> dbUploadStatus(
       showToast('Uploaded Successfully!');
     } else {
       // If the document exists, add to the 'data' array
-      DocumentReference docRef = querySnapshot.docs.first.reference;
+      firebase.DocumentReference docRef = querySnapshot.docs.first.reference;
       List<dynamic> oldData =
           (querySnapshot.docs.first.data() as Map<String, dynamic>)['data'] ??
               [];
@@ -601,13 +611,13 @@ Future<void> dbUploadStatus(
 // }
 
 Future<Map<String, dynamic>> dbDeleteUser(
-    FirebaseFirestore db, ethAddress) async {
-  CollectionReference usersCollection = db.collection('users');
-  CollectionReference statusCollection = db.collection('status');
+    firebase.FirebaseFirestore db, ethAddress) async {
+  firebase.CollectionReference usersCollection = db.collection('users');
+  firebase.CollectionReference statusCollection = db.collection('status');
 
   try {
     // Delete the user document from the 'users' collection
-    QuerySnapshot userSnapshot = await usersCollection
+    firebase.QuerySnapshot userSnapshot = await usersCollection
         .where("ethAddress", isEqualTo: ethAddress)
         .limit(1)
         .get();
@@ -617,7 +627,7 @@ Future<Map<String, dynamic>> dbDeleteUser(
     }
 
     // Delete all documents in 'status' collection with the matching ethAddress
-    QuerySnapshot statusSnapshot =
+    firebase.QuerySnapshot statusSnapshot =
         await statusCollection.where("ethAddress", isEqualTo: ethAddress).get();
 
     for (var doc in statusSnapshot.docs) {
@@ -681,17 +691,17 @@ Future<Map<String, dynamic>> dbDeleteUser(
 
 Future<Map<String, dynamic>> dbUpdateUser(
   String image,
-  FirebaseFirestore db,
+  firebase.FirebaseFirestore db,
   String displayName,
   String bio,
   String newUsername,
   ethAddress,
 ) async {
-  CollectionReference usersCollection = db.collection('users');
+  firebase.CollectionReference usersCollection = db.collection('users');
 
   try {
     // Check if the username already exists
-    QuerySnapshot usernameSnapshot = await usersCollection
+    firebase.QuerySnapshot usernameSnapshot = await usersCollection
         .where("username", isEqualTo: newUsername)
         .limit(1)
         .get();
@@ -701,7 +711,7 @@ Future<Map<String, dynamic>> dbUpdateUser(
     }
 
     // Retrieve the user's document by ethAddress
-    QuerySnapshot userSnapshot = await usersCollection
+    firebase.QuerySnapshot userSnapshot = await usersCollection
         .where("ethAddress", isEqualTo: ethAddress)
         .limit(1)
         .get();
@@ -710,7 +720,7 @@ Future<Map<String, dynamic>> dbUpdateUser(
       throw {'error': "User not found!"};
     }
 
-    DocumentReference userDocRef = userSnapshot.docs.first.reference;
+    firebase.DocumentReference userDocRef = userSnapshot.docs.first.reference;
     Map<String, dynamic> newData =
         userSnapshot.docs.first.data() as Map<String, dynamic>;
 
@@ -718,13 +728,13 @@ Future<Map<String, dynamic>> dbUpdateUser(
     newData['username'] = newUsername;
     newData['displayName'] = displayName;
     newData['bio'] = bio;
-    newData['image'] = image;
+    newData['imageUrl'] = image;
 
     // Update the document in Firestore
     await userDocRef.update(newData);
 
     // Update local Hive storage
-    await Hive.box('Beepo2.0').put('base64Image', image);
+    await Hive.box('Beepo2.0').put('imageUrl', image);
     await Hive.box('Beepo2.0').put('displayName', displayName);
     await Hive.box('Beepo2.0').put('username', newUsername);
     await Hive.box('Beepo2.0').put('bio', bio);
@@ -787,61 +797,77 @@ Future<Map<String, dynamic>> dbUpdateUser(
 //   }
 // }
 
-Future<Map<String, dynamic>> dbGetAllUsers(FirebaseFirestore db) async {
+Future<Map<String, dynamic>> dbGetAllUsers(
+    firebase.FirebaseFirestore db) async {
   try {
-    // Query the first 10 documents in the 'users' collection
-    QuerySnapshot querySnapshot = await db.collection('users').limit(10).get();
+    firebase.QuerySnapshot querySnapshot =
+        await db.collection('users').limit(10).get();
 
     if (querySnapshot.docs.isEmpty) {
       throw Exception("No users found");
     }
 
-    // Map each document to the desired data structure
+    // Create a DateFormat instance for consistent date formatting
+    final dateFormatter = DateFormat('yyyy-MM-dd HH:mm:ss');
+
     List<Map<String, dynamic>> data = querySnapshot.docs.map((doc) {
-      Map<String, dynamic> e = doc.data() as Map<String, dynamic>;
+      Map<String, dynamic> userData = doc.data() as Map<String, dynamic>;
+
+      // Convert Timestamp to formatted date string using intl
+      final createdAt = (userData['createdAt'] as firebase.Timestamp).toDate();
+      final formattedDate = dateFormatter.format(createdAt);
+
       return {
-        'joined': e['createdAt'],
-        'username': e['username'],
-        'displayName': e['displayName'],
-        'ethAddress': e['ethAddress'],
-        'btcAddress': e['btcAddress'],
-        'image': e['image'],
-        'bio': e['bio'],
+        'joined': formattedDate,
+        'username': userData['username'] ?? '',
+        'displayName': userData['displayName'] ?? '',
+        'ethAddress': userData['ethAddress'] ?? '',
+        'btcAddress': userData['btcAddress'] ?? '',
+        'image': userData['imageUrl'] ?? '',
+        'bio': userData['bio'] ?? '',
       };
     }).toList();
 
-    // Filter out entries with null values
+    // Filter out invalid entries
     data = data
-        .where((item) => item.values.every((value) => value != null))
+        .where((item) =>
+            item['username'].toString().isNotEmpty &&
+            item['displayName'].toString().isNotEmpty)
         .toList();
 
     if (data.isEmpty) {
-      throw Exception("All user data was invalid");
+      throw Exception("No valid users found");
     }
 
-    // Store the data in Hive for offline access
+    // Store the data in Hive
     await Hive.box('Beepo2.0').put('allUsers', data);
 
-    return {'success': "done", "data": data};
+    return {
+      'success': true,
+      'data': data,
+    };
   } catch (e) {
     if (kDebugMode) {
       print("ERROR MESSAGE: $e");
     }
-    return {'error': e.toString()};
+    return {
+      'success': false,
+      'error': e.toString(),
+    };
   }
 }
 
-Stream<Map<String, dynamic>> dbWatchAllUsers(FirebaseFirestore db) {
+Stream<Map<String, dynamic>> dbWatchAllUsers(firebase.FirebaseFirestore db) {
   // Reference the 'users' collection
-  CollectionReference usersCollection = db.collection('users');
+  firebase.CollectionReference usersCollection = db.collection('users');
 
   // Listen to changes in the 'users' collection
   return usersCollection.snapshots().asyncExpand((snapshot) {
     // Map DocumentChanges to return only 'added' and 'modified' types
     return Stream.fromIterable(
       snapshot.docChanges.where((change) =>
-          change.type == DocumentChangeType.added ||
-          change.type == DocumentChangeType.modified),
+          change.type == firebase.DocumentChangeType.added ||
+          change.type == firebase.DocumentChangeType.modified),
     ).map((change) => change.doc.data() as Map<String, dynamic>);
   });
 }
@@ -881,13 +907,13 @@ Stream<Map<String, dynamic>> dbWatchAllUsers(FirebaseFirestore db) {
 // }
 
 Future<Map<String, dynamic>> dbGetUser(
-    FirebaseFirestore db, String username) async {
+    firebase.FirebaseFirestore db, String username) async {
   // Reference the 'users' collection in Firestore
-  CollectionReference usersCollection = db.collection('users');
+  firebase.CollectionReference usersCollection = db.collection('users');
 
   try {
     // Query for the document with matching username
-    QuerySnapshot querySnapshot = await usersCollection
+    firebase.QuerySnapshot querySnapshot = await usersCollection
         .where('username', isEqualTo: username)
         .limit(1)
         .get();
@@ -925,15 +951,15 @@ Future<Map<String, dynamic>> dbGetUser(
 // }
 
 Future<Map<String, dynamic>> dbGetUserByAddress(
-    FirebaseFirestore db, EthereumAddress ethAddress) async {
+    firebase.FirebaseFirestore db, EthereumAddress ethAddress) async {
   try {
     // Reference the 'users' collection in Firestore
-    CollectionReference usersCollection = db.collection('users');
+    firebase.CollectionReference usersCollection = db.collection('users');
 
     // Query for the document with matching ethAddress
-    QuerySnapshot querySnapshot = await usersCollection
+    firebase.QuerySnapshot querySnapshot = await usersCollection
         .where('ethAddress', isEqualTo: ethAddress)
-        .limit(1) // Use limit for efficiency, since only one user is expected
+        .limit(1)
         .get();
 
     if (querySnapshot.docs.isEmpty) {

@@ -9,10 +9,10 @@ import 'package:Beepo/session/foreground_session.dart';
 import 'package:Beepo/utils/styles.dart';
 import 'package:Beepo/widgets/commons.dart';
 import 'package:Beepo/widgets/toast.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:encrypt/encrypt.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -143,7 +143,7 @@ class _VerifyCodeState extends State<VerifyCode> {
                   } catch (e) {
                     debugPrint("Provider Error: $e");
                     showToast("Failed to initialize providers");
-                    Navigator.pop(context); // Remove loader
+                    Navigator.pop(context);
                     return;
                   }
 
@@ -168,7 +168,7 @@ class _VerifyCodeState extends State<VerifyCode> {
                   } catch (e) {
                     debugPrint("Mnemonic Error: $e");
                     showToast("Failed to generate wallet credentials");
-                    Navigator.pop(context);
+                    Get.back();
                     return;
                   }
 
@@ -183,7 +183,7 @@ class _VerifyCodeState extends State<VerifyCode> {
                   } catch (e) {
                     debugPrint("Encryption Error: $e");
                     showToast("Encryption failed");
-                    Navigator.pop(context);
+                    Get.back();
                     return;
                   }
 
@@ -221,58 +221,63 @@ class _VerifyCodeState extends State<VerifyCode> {
                   } catch (e) {
                     debugPrint("Wallet Initialization Error: $e");
                     showToast("Failed to initialize wallet");
-                    Navigator.pop(context);
+                    Get.back();
                     return;
                   }
 
                   // Image Processing
                   debugPrint("Step 7: Processing Image");
-                  late final String base64Image;
+                  late final Uint8List rawImageData = widget.image;
                   try {
-                    base64Image = base64Encode(widget.image);
+                    final String base64Image = base64Encode(rawImageData);
                     debugPrint("✅ Image Encoded Successfully");
                     debugPrint("PROFILE IMAGE:$base64Image");
                   } catch (e) {
                     debugPrint("Image Processing Error: $e");
                     showToast("Failed to process image");
-                    Navigator.pop(context);
+                    Get.back();
                     return;
                   }
 
-                  // User Creation or Data Storage
-                  debugPrint("Step 8: User Data Management");
-                  try {
-                    if (widget.data != null) {
-                      debugPrint("Storing user data in Hive");
-                      final box = Hive.box('Beepo2.0');
-                      await Future.wait([
-                        box.put('encryptedSeedPhrase', encrypteData.base64),
-                        box.put('base64Image', base64Image),
-                        box.put('ethAddress', ethAddress.toString()),
-                        box.put('btcAddress', btcAddress),
-                        box.put('displayName',
-                            widget.data!['response']['displayName']),
-                        box.put(
-                            'username', widget.data!['response']['username']),
-                        box.put('isSignedUp', true),
-                      ]);
-                      debugPrint("✅ Hive Data Stored Successfully");
-                    } else {
-                      debugPrint("Creating new user");
-                      await accountProvider.createUser(
-                        base64Image,
-                        widget.name,
-                        ethAddress.toString(),
-                        btcAddress,
-                        encrypteData,
-                      );
-                      debugPrint("✅ User Created Successfully");
+                  debugPrint("User Creation or Data Storage");
+                  if (accountProvider.db != null) {
+                    try {
+                      if (widget.data != null) {
+                        final box = Hive.box('Beepo2.0');
+                        await Future.wait([
+                          box.put('encryptedSeedPhrase', encrypteData.base64),
+                          box.put('base64Image', rawImageData),
+                          box.put('ethAddress', ethAddress.toString()),
+                          box.put('btcAddress', btcAddress),
+                          box.put('displayName',
+                              widget.data!['response']['displayName']),
+                          box.put(
+                              'username', widget.data!['response']['username']),
+                          box.put('isSignedUp', true),
+                        ]);
+                      } else {
+                        debugPrint("Creating new user");
+                        debugPrint("Creating new base64Image:$rawImageData");
+                        debugPrint("Creating new name:${widget.name}");
+                        debugPrint("Creating new btcAddress:$btcAddress");
+                        debugPrint(
+                            "Creating new encrypteData:${encrypteData.base16}");
+                        debugPrint(
+                            "Creating new ethAddress:${ethAddress.toString()}");
+
+                        await accountProvider.createUser(
+                          rawImageData,
+                          widget.name,
+                          ethAddress.toString(),
+                          btcAddress,
+                          encrypteData,
+                        );
+                        debugPrint("✅ User Created Successfully");
+                      }
+                    } catch (e) {
+                      debugPrint("Create user account: $e");
+                      showToast("Failed to create user account");
                     }
-                  } catch (e) {
-                    debugPrint("User Data Management Error: $e");
-                    showToast("Failed to create user account");
-                    Navigator.pop(context);
-                    return;
                   }
 
                   // Session Authorization
@@ -287,7 +292,7 @@ class _VerifyCodeState extends State<VerifyCode> {
                   } catch (e) {
                     debugPrint("Session Authorization Error: $e");
                     showToast("Failed to authorize session");
-                    Navigator.pop(context);
+                    Get.back();
                     return;
                   }
 
@@ -300,35 +305,19 @@ class _VerifyCodeState extends State<VerifyCode> {
                   } catch (e) {
                     debugPrint("Account State Error: $e");
                     showToast("Failed to initialize account state");
-                    Navigator.pop(context);
+                    Get.back();
                     return;
                   }
-
-                  // Navigation
-                  debugPrint("Step 11: Navigation");
-                  try {
-                    Navigator.pop(context);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const BottomNavHome(),
-                      ),
-                    );
-                    debugPrint("✅ Navigation Completed Successfully");
-                  } catch (e) {
-                    debugPrint("Navigation Error: $e");
-                    showToast("Navigation failed");
-                    Navigator.pop(context);
-                    return;
-                  }
+                  debugPrint("NAVIGATE TO MAIN SCREEN");
+                  Get.back();
+                  Get.to(() => const BottomNavHome());
                 } catch (e) {
                   debugPrint("Critical Error: $e");
                   showToast("An unexpected error occurred");
-                  Navigator.pop(context);
+                  Get.back();
                 }
               },
             ),
-            const SizedBox(height: 40, width: double.infinity),
           ],
         ),
       ),

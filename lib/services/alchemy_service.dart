@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -30,6 +31,8 @@ class AlchemyService {
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
+      debugPrint("ALCHEMY RESPONSE:${response.body}");
+      debugPrint("ALCHEMY STATUS:${response.statusCode}");
       if (data['result'] != null &&
           data['result']['tokenBalances'].length > 0) {
         String balance = data['result']['tokenBalances'][0]['tokenBalance'];
@@ -55,6 +58,8 @@ class AlchemyService {
     );
 
     if (response.statusCode == 200) {
+      debugPrint("ALCHEMY RESPONSE2:${response.body}");
+      debugPrint("ALCHEMY STATUS2:${response.statusCode}");
       final data = json.decode(response.body);
       if (data['result'] != null) {
         final balance = BigInt.parse(data['result'].substring(2), radix: 16);

@@ -34,12 +34,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         elevation: 0,
         backgroundColor: const Color(0xff0e014c),
         leading: IconButton(
-            icon: const Icon(
-              Icons.arrow_back,
-              size: 30,
-              color: AppColors.white,
-            ),
-            onPressed: () {}),
+          icon: const Icon(
+            Icons.arrow_back,
+            size: 30,
+            color: AppColors.white,
+          ),
+          onPressed: () {},
+        ),
         actions: [
           IconButton(
             icon: const Icon(
@@ -47,7 +48,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               color: AppColors.white,
             ),
             onPressed: () {},
-          )
+          ),
         ],
       ),
       body: Container(
@@ -64,7 +65,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     borderRadius: BorderRadius.circular(100),
                     child: Image(
                       image: CacheMemoryImageProvider(
-                          user!['image'], base64Decode(user['image'])),
+                        user!['image'],
+                        base64Decode(
+                          user['image'],
+                        ),
+                      ),
                       height: 100,
                       width: 100,
                       fit: BoxFit.cover,

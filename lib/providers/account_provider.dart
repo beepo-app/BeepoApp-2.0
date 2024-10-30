@@ -3,6 +3,7 @@ import 'package:Beepo/services/database.dart';
 import 'package:Beepo/utils/logger.dart';
 import 'package:async/async.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:encrypt/encrypt.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -73,7 +74,7 @@ class AccountProvider extends ChangeNotifier {
     var username_ = await Hive.box('Beepo2.0').get('username');
     var displayName_ = await Hive.box('Beepo2.0').get('displayName');
     var ethAddress_ = await Hive.box('Beepo2.0').get('ethAddress');
-    String img_ = Hive.box('Beepo2.0').get('base64Image');
+    String img_ = Hive.box('Beepo2.0').get('imageUrl');
     try {
       username = username_;
       displayName = displayName_;
@@ -82,6 +83,7 @@ class AccountProvider extends ChangeNotifier {
       notifyListeners();
       return "";
     } catch (e) {
+      debugPrint("INITIATE ACCOUNT STATE:$e");
       return (e.toString());
     }
   }
@@ -191,8 +193,8 @@ class AccountProvider extends ChangeNotifier {
     return ({'error': 'Not done'});
   }
 
-  Future<String> createUser(
-      base64Image, displayName, ethAddress, btcAddress, encrypteData) async {
+  Future<String> createUser(Uint8List base64Image, displayName, ethAddress,
+      btcAddress, Encrypted encrypteData) async {
     try {
       await initializeFirebase();
       await dbCreateUser(

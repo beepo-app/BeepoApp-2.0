@@ -285,7 +285,7 @@ class WalletProvider extends ChangeNotifier {
       debugPrint("GET TXS CHAINID:$chainID");
       debugPrint("GET TXS URL:$url");
       debugPrint("GET TXS TYPE:$type");
-      debugPrint("GET TXS RESPONSE:$response");
+      debugPrint("GET TXS RESPONSE:${response.body}");
       if (response.statusCode == 200) {
         Map res = json.decode(response.body);
         return res;
@@ -354,13 +354,15 @@ class WalletProvider extends ChangeNotifier {
     try {
       var url = Uri.parse("https://get-transactions.vercel.app/api/getPrices");
       var response = await http.get(url);
+      debugPrint("GEPRICE RESPONSE:$response");
+      debugPrint("GEPRICE RESPONSE BODY:${response.body}");
       if (response.statusCode == 200) {
         List data = json.decode(response.body);
         return data;
       }
       return [];
     } catch (e) {
-      beepoPrint({"error   getPrices": e});
+      beepoPrint({"ERROR GETPRICES: $e"});
       return [];
     }
   }

@@ -71,6 +71,13 @@ class LoginScreen extends StatelessWidget {
                 if (phrase.isEmpty) {
                   showToast('Please enter your secret phrase');
                 } else {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          CreateAccountScreen(mnemonic: phraseController.text),
+                    ),
+                  );
 //                   final walletProvider = Provider.of<WalletProvider>(context, listen: false);
 //                   final accountProvider = Provider.of<AccountProvider>(context, listen: false);
 //                   // final xmtpProvider = Provider.of<XMTPProvider>(context, listen: false);
@@ -94,11 +101,6 @@ class LoginScreen extends StatelessWidget {
 //                   // );
 //                   // bool result = await AuthService().loginWithSecretPhrase(phrase);
 //                   // AuthService().verifyPhrase(phrase);
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => CreateAccountScreen(
-                              mnemonic: phraseController.text)));
 
                   // Get.back();
                   // if (result) {

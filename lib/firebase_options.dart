@@ -63,7 +63,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '74902736666',
     projectId: 'beepo-v2',
     storageBucket: 'beepo-v2.appspot.com',
-    iosClientId: '74902736666-kj2t92nfqdceh4rh4a8a8djk0a8ga9jl.apps.googleusercontent.com',
+    iosClientId:
+        '74902736666-kj2t92nfqdceh4rh4a8a8djk0a8ga9jl.apps.googleusercontent.com',
     iosBundleId: 'com.example.Beepo',
   );
 }
