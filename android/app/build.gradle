@@ -58,8 +58,8 @@ android {
         applicationId "com.beepo.app"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion 30
-        targetSdkVersion 33
+        minSdkVersion 31
+        targetSdkVersion 34
         versionCode flutterVersionCode.toInteger()
         versionName "2.0.0"
         multiDexEnabled true
@@ -85,8 +85,9 @@ flutter {
     source '../..'
 }
 
+
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.20"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.0"
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.2.2'
     implementation 'com.github.Web3Auth:web3auth-android-sdk:8.0.3'
 } 

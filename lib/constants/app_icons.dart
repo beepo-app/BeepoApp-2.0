@@ -2,7 +2,7 @@ import 'package:Beepo/constants/constants.dart';
 
 class AppImages {
   static const String beepo = "assets/icons/beepo.png";
-  static const String bCoin = "assets/bCoin.png";
+  // static const String bCoin = "assets/bCoin.png";
   static const String chatIcon = "assets/chat_icon.svg";
 
   static final String logo = 'Vos-logo'.svg;

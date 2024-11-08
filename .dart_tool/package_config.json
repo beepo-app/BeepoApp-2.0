@@ -500,10 +500,10 @@
       "languageVersion": "3.3"
     },
     {
-      "name": "flutter_app_badger",
-      "rootUri": "file:///C:/Users/Favour%20Williams/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_app_badger-1.5.0",
+      "name": "flutter_app_badge",
+      "rootUri": "file:///C:/Users/Favour%20Williams/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_app_badge-2.0.2",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "3.0"
     },
     {
       "name": "flutter_cache_manager",
@@ -1406,24 +1406,6 @@
       "languageVersion": "2.17"
     },
     {
-      "name": "uni_links2",
-      "rootUri": "file:///C:/Users/Favour%20Williams/AppData/Local/Pub/Cache/hosted/pub.dev/uni_links2-0.6.0+2",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
-      "name": "uni_links2_platform_interface",
-      "rootUri": "file:///C:/Users/Favour%20Williams/AppData/Local/Pub/Cache/hosted/pub.dev/uni_links2_platform_interface-1.0.0+2",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
-      "name": "uni_links_web2",
-      "rootUri": "file:///C:/Users/Favour%20Williams/AppData/Local/Pub/Cache/hosted/pub.dev/uni_links_web2-0.1.0+2",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
       "name": "universal_io",
       "rootUri": "file:///C:/Users/Favour%20Williams/AppData/Local/Pub/Cache/hosted/pub.dev/universal_io-2.2.2",
       "packageUri": "lib/",
@@ -1628,7 +1610,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2024-10-30T01:47:05.014369Z",
+  "generated": "2024-11-08T10:11:26.845247Z",
   "generator": "pub",
   "generatorVersion": "3.5.3",
   "flutterRoot": "file:///C:/src/flutter",

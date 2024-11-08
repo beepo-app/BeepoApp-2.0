@@ -57,7 +57,7 @@ extension ImageExtension on String {
 
 class AppImages {
   static const String Beepo = "assets/icons/Beepo.png";
-  static const String bCoin = "assets/bCoin.png";
+  // static const String bCoin = "assets/bCoin.png";
   static const String chatIcon = "assets/chat_icon.svg";
   static final String logo = 'Vos-logo'.svg;
   static final String splashBg = 'splash_bg'.png;

@@ -48,10 +48,10 @@
 @import firebase_storage;
 #endif
 
-#if __has_include(<flutter_app_badger/FlutterAppBadgerPlugin.h>)
-#import <flutter_app_badger/FlutterAppBadgerPlugin.h>
+#if __has_include(<flutter_app_badge/FlutterAppBadgePlugin.h>)
+#import <flutter_app_badge/FlutterAppBadgePlugin.h>
 #else
-@import flutter_app_badger;
+@import flutter_app_badge;
 #endif
 
 #if __has_include(<flutter_dynamic_icon/FLTDynamicIconPlugin.h>)
@@ -132,12 +132,6 @@
 @import sqlite3_flutter_libs;
 #endif
 
-#if __has_include(<uni_links2/UniLinksPlugin.h>)
-#import <uni_links2/UniLinksPlugin.h>
-#else
-@import uni_links2;
-#endif
-
 #if __has_include(<url_launcher_ios/URLLauncherPlugin.h>)
 #import <url_launcher_ios/URLLauncherPlugin.h>
 #else
@@ -166,7 +160,7 @@
   [FLTFirebaseAuthPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseAuthPlugin"]];
   [FLTFirebaseCorePlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseCorePlugin"]];
   [FLTFirebaseStoragePlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseStoragePlugin"]];
-  [FlutterAppBadgerPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterAppBadgerPlugin"]];
+  [FlutterAppBadgePlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterAppBadgePlugin"]];
   [FLTDynamicIconPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTDynamicIconPlugin"]];
   [FlutterLocalNotificationsPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterLocalNotificationsPlugin"]];
   [FlutterNativeSplashPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterNativeSplashPlugin"]];
@@ -180,7 +174,6 @@
   [SharedPreferencesPlugin registerWithRegistrar:[registry registrarForPlugin:@"SharedPreferencesPlugin"]];
   [SqflitePlugin registerWithRegistrar:[registry registrarForPlugin:@"SqflitePlugin"]];
   [Sqlite3FlutterLibsPlugin registerWithRegistrar:[registry registrarForPlugin:@"Sqlite3FlutterLibsPlugin"]];
-  [UniLinksPlugin registerWithRegistrar:[registry registrarForPlugin:@"UniLinksPlugin"]];
   [URLLauncherPlugin registerWithRegistrar:[registry registrarForPlugin:@"URLLauncherPlugin"]];
   [Web3AuthFlutterPlugin registerWithRegistrar:[registry registrarForPlugin:@"Web3AuthFlutterPlugin"]];
   [FLTWebViewFlutterPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTWebViewFlutterPlugin"]];

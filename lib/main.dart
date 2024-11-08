@@ -17,7 +17,7 @@ import 'package:get/get_navigation/get_navigation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_app_badger/flutter_app_badger.dart';
+import 'package:flutter_app_badge/flutter_app_badge.dart';
 import 'session/foreground_session.dart';
 
 void main() async {
@@ -88,9 +88,9 @@ void _monitorTotalUnreadBadge() {
   }
   session.watchTotalNewMessageCount().listen((count) {
     if (count > 0) {
-      FlutterAppBadger.updateBadgeCount(count);
+      FlutterAppBadge.count(count);
     } else {
-      FlutterAppBadger.removeBadge();
+      FlutterAppBadge.count(0);
     }
   });
 }

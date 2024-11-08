@@ -51,11 +51,6 @@ public final class GeneratedPluginRegistrant {
       Log.e(TAG, "Error registering plugin firebase_storage, io.flutter.plugins.firebase.storage.FlutterFirebaseStoragePlugin", e);
     }
     try {
-      flutterEngine.getPlugins().add(new fr.g123k.flutterappbadger.FlutterAppBadgerPlugin());
-    } catch (Exception e) {
-      Log.e(TAG, "Error registering plugin flutter_app_badger, fr.g123k.flutterappbadger.FlutterAppBadgerPlugin", e);
-    }
-    try {
       flutterEngine.getPlugins().add(new io.github.tastelessjolt.flutterdynamicicon.FlutterDynamicIconPlugin());
     } catch (Exception e) {
       Log.e(TAG, "Error registering plugin flutter_dynamic_icon, io.github.tastelessjolt.flutterdynamicicon.FlutterDynamicIconPlugin", e);
@@ -124,11 +119,6 @@ public final class GeneratedPluginRegistrant {
       flutterEngine.getPlugins().add(new eu.simonbinder.sqlite3_flutter_libs.Sqlite3FlutterLibsPlugin());
     } catch (Exception e) {
       Log.e(TAG, "Error registering plugin sqlite3_flutter_libs, eu.simonbinder.sqlite3_flutter_libs.Sqlite3FlutterLibsPlugin", e);
-    }
-    try {
-      flutterEngine.getPlugins().add(new name.avioli.unilinks.UniLinksPlugin());
-    } catch (Exception e) {
-      Log.e(TAG, "Error registering plugin uni_links2, name.avioli.unilinks.UniLinksPlugin", e);
     }
     try {
       flutterEngine.getPlugins().add(new io.flutter.plugins.urllauncher.UrlLauncherPlugin());

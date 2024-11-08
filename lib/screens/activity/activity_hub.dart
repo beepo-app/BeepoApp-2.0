@@ -1,14 +1,6 @@
-import 'package:Beepo/providers/account_provider.dart';
-import 'package:Beepo/providers/new_point_working.dart';
-import 'package:Beepo/providers/referral_provider.dart';
-import 'package:Beepo/providers/time_base_provider.dart';
-import 'package:Beepo/providers/total_points_provider.dart';
 import 'package:Beepo/widgets/activity_button.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:provider/provider.dart';
-import 'package:share_plus/share_plus.dart';
 
 class ActivityHubScreen extends StatefulWidget {
   const ActivityHubScreen({super.key});
@@ -20,41 +12,41 @@ class ActivityHubScreen extends StatefulWidget {
 class _ActivityHubScreenState extends State<ActivityHubScreen> {
   @override
   Widget build(BuildContext context) {
-    final accountProvider = Provider.of<AccountProvider>(context);
+    // final accountProvider = Provider.of<AccountProvider>(context);
 
-    final username = accountProvider.username;
+    // final username = accountProvider.username;
 
-    String getReferralLink(String? username) {
-      return 'https://play.google.com/store/apps/details?id=com.beepo.app&referrer=$username';
-    }
+    // String getReferralLink(String? username) {
+    //   return 'https://play.google.com/store/apps/details?id=com.beepo.app&referrer=$username';
+    // }
 
-    String referralLink = getReferralLink(username);
+    // String referralLink = getReferralLink(username);
 
-    final dailyPointProvider = Provider.of<NewPointsProvider>(context).points;
+    // final dailyPointProvider = Provider.of<NewPointsProvider>(context).points;
 
-    final timeBasedPointsProvider =
-        Provider.of<TimeBasedPointsProvider>(context).points;
+    // final timeBasedPointsProvider =
+    //     Provider.of<TimeBasedPointsProvider>(context).points;
 
-    final referralPoints = Provider.of<ReferralProvider>(context).points;
-    final canClaimPoints = Provider.of<NewPointsProvider>(context).canClaim;
+    // final referralPoints = Provider.of<ReferralProvider>(context).points;
+    // final canClaimPoints = Provider.of<NewPointsProvider>(context).canClaim;
 
-    // Calculate total points
-    final totalPoints =
-        dailyPointProvider + timeBasedPointsProvider + referralPoints;
+    // // Calculate total points
+    // final totalPoints =
+    //     dailyPointProvider + timeBasedPointsProvider + referralPoints;
 
-    final totalPointProvider = Provider.of<TotalPointProvider>(context);
-    final rankDescriptions = {
-      'Novice': 'This is the starting rank. Earn more points to level up!',
-      'Amateur': 'You are gaining experience. Keep earning points!',
-      'Senior': 'You are becoming experienced. Continue the good work!',
-      'Enthusiast': 'You are passionate about your activities. Great job!',
-      'Professional': 'You are skilled and consistent. Keep pushing forward!',
-      'Expert': 'You have reached a high level of expertise. Impressive!',
-      'Leader': 'You are among the best. Others look up to you!',
-      'Veteran': 'You have a wealth of experience. True dedication!',
-      'Master': 'You have mastered the system. Few can match your skills!',
-      'Great': 'An exceptional rank, achieved by very few!',
-    };
+    // final totalPointProvider = Provider.of<TotalPointProvider>(context);
+    // final rankDescriptions = {
+    //   'Novice': 'This is the starting rank. Earn more points to level up!',
+    //   'Amateur': 'You are gaining experience. Keep earning points!',
+    //   'Senior': 'You are becoming experienced. Continue the good work!',
+    //   'Enthusiast': 'You are passionate about your activities. Great job!',
+    //   'Professional': 'You are skilled and consistent. Keep pushing forward!',
+    //   'Expert': 'You have reached a high level of expertise. Impressive!',
+    //   'Leader': 'You are among the best. Others look up to you!',
+    //   'Veteran': 'You have a wealth of experience. True dedication!',
+    //   'Master': 'You have mastered the system. Few can match your skills!',
+    //   'Great': 'An exceptional rank, achieved by very few!',
+    // };
 
     return Scaffold(
       appBar: AppBar(
@@ -101,7 +93,7 @@ class _ActivityHubScreenState extends State<ActivityHubScreen> {
                                 borderRadius: BorderRadius.circular(50),
                                 color: const Color.fromRGBO(231, 231, 231, 1)),
                             child: Icon(
-                              totalPointProvider.rankEntry.value,
+                              Iconsax.info_circle,
                               color: const Color.fromRGBO(250, 145, 8, 1),
                             ),
                           ),
@@ -124,7 +116,7 @@ class _ActivityHubScreenState extends State<ActivityHubScreen> {
                                 height: 1,
                               ),
                               Text(
-                                totalPointProvider.rankEntry.key,
+                                "Professional",
                                 style: const TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.w500,
@@ -143,9 +135,7 @@ class _ActivityHubScreenState extends State<ActivityHubScreen> {
                               return AlertDialog(
                                 title: const Text('Rank Information'),
                                 content: Text(
-                                  rankDescriptions[
-                                          totalPointProvider.rankEntry.key] ??
-                                      'No description available.',
+                                  'No description available.',
                                 ),
                                 actions: [
                                   TextButton(
@@ -184,8 +174,9 @@ class _ActivityHubScreenState extends State<ActivityHubScreen> {
                             width: 40.0,
                             height: 40.0,
                             decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(50),
-                                color: const Color.fromRGBO(231, 231, 231, 1)),
+                              borderRadius: BorderRadius.circular(50),
+                              color: const Color.fromRGBO(231, 231, 231, 1),
+                            ),
                             child: const Icon(
                               Iconsax.user_add,
                             ),
@@ -209,7 +200,7 @@ class _ActivityHubScreenState extends State<ActivityHubScreen> {
                                 height: 1,
                               ),
                               Text(
-                                '$referralPoints',
+                                '105',
                                 style: const TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.w500,
@@ -224,8 +215,6 @@ class _ActivityHubScreenState extends State<ActivityHubScreen> {
                         children: [
                           IconButton(
                             onPressed: () async {
-                              Clipboard.setData(
-                                  ClipboardData(text: referralLink));
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                     content: Text('Referral link copied!')),
@@ -236,9 +225,7 @@ class _ActivityHubScreenState extends State<ActivityHubScreen> {
                             ),
                           ),
                           IconButton(
-                            onPressed: () async {
-                              Share.share(referralLink, subject: 'Join Beepo!');
-                            },
+                            onPressed: () async {},
                             icon: const Icon(
                               Iconsax.global,
                             ),
@@ -291,7 +278,7 @@ class _ActivityHubScreenState extends State<ActivityHubScreen> {
                                 height: 1,
                               ),
                               Text(
-                                "$totalPoints",
+                                "10,465",
                                 style: const TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.w500,
@@ -303,7 +290,7 @@ class _ActivityHubScreenState extends State<ActivityHubScreen> {
                         ],
                       ),
                       Opacity(
-                        opacity: totalPoints > 0 ? 1.0 : 0.5,
+                        opacity: 1.0,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(
@@ -313,7 +300,7 @@ class _ActivityHubScreenState extends State<ActivityHubScreen> {
                             foregroundColor: const Color(0xff263238),
                             fixedSize: const Size(120, 1),
                           ),
-                          onPressed: totalPoints > 0 ? () {} : null,
+                          onPressed: () {},
                           child: const Text('Withdraw'),
                         ),
                       ),
@@ -349,7 +336,7 @@ class _ActivityHubScreenState extends State<ActivityHubScreen> {
                             width: 10,
                           ),
                           Text(
-                            'Daily Login Point: $dailyPointProvider',
+                            'Daily Login Point',
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
@@ -363,20 +350,11 @@ class _ActivityHubScreenState extends State<ActivityHubScreen> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          backgroundColor: canClaimPoints
-                              ? const Color(0xffD9D9D9)
-                              : Colors.grey,
+                          backgroundColor: const Color(0xffD9D9D9),
                           foregroundColor: const Color(0xff263238),
                           fixedSize: const Size(120, 1),
                         ),
-                        onPressed: canClaimPoints
-                            ? () {
-                                Provider.of<NewPointsProvider>(context,
-                                        listen: false)
-                                    .claimPoints(300,
-                                        accountProvider.ethAddress.toString());
-                              }
-                            : null,
+                        onPressed: () {},
                         child: const Text('Claim'),
                       ),
                     ],
@@ -416,7 +394,7 @@ class _ActivityHubScreenState extends State<ActivityHubScreen> {
               ActivityButton(
                 checkStatus: false,
                 mytext: 'Stay active for 3hrs',
-                buttontext: 'Points: $timeBasedPointsProvider',
+                buttontext: '500P',
                 icon: Iconsax.tick_circle,
               ),
               const SizedBox(
