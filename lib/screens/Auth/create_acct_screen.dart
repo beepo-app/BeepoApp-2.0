@@ -1,5 +1,5 @@
+import 'dart:convert';
 import 'dart:typed_data';
-
 import 'package:Beepo/components/Beepo_filled_button.dart';
 import 'package:Beepo/constants/constants.dart';
 import 'package:Beepo/screens/Auth/pin_code.dart';
@@ -7,6 +7,7 @@ import 'package:Beepo/utils/functions.dart';
 import 'package:Beepo/widgets/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:hive_flutter/hive_flutter.dart'; // Import Hive
 
 class CreateAccountScreen extends StatefulWidget {
   final String? mnemonic;
@@ -29,7 +30,6 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
         backgroundColor: Colors.white,
         leading: IconButton(
           icon: const Icon(Iconsax.arrow_left),
-          //size: 30.0,
           onPressed: () => Navigator.pop(context),
         ),
         foregroundColor: Colors.black,
@@ -67,7 +67,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                             height: 120,
                             width: 120,
                             fit: BoxFit.cover,
-                          ))
+                          ),
+                        )
                       : const Icon(
                           Icons.person_outlined,
                           size: 117,
@@ -136,6 +137,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   showToast('Please select a display image');
                   return;
                 } else {
+                  // Save the profile image to Hive
+                  await _saveProfileImageToHive(selectedImage!);
+
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -150,10 +154,22 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                 }
               },
             ),
-            const Spacer()
+            const Spacer(),
           ],
         ),
       ),
     );
+  }
+
+  Future<void> _saveProfileImageToHive(Uint8List imageBytes) async {
+    try {
+      final box = Hive.box('Beepo2.0');
+      final base64Image = base64Encode(imageBytes);
+      await box.put('imageUrl', base64Image);
+      debugPrint("Profile image saved to Hive successfully");
+    } catch (e) {
+      debugPrint("Error saving profile image to Hive: $e");
+      showToast("Failed to save profile image");
+    }
   }
 }

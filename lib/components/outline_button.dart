@@ -1,61 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
-
-import '../utils/styles.dart';
 
 class OutlnButton extends StatelessWidget {
-  final SvgPicture? icon;
+  final Widget icon;
   final String text;
-  final VoidCallback onPressed;
-
-  // final Color color;
+  final VoidCallback? onPressed;
+  final bool disabled;
 
   const OutlnButton({
     super.key,
+    required this.icon,
     required this.text,
-    this.icon,
-    // required this.color,
-    required this.onPressed,
+    this.onPressed,
+    this.disabled = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.8,
-      height: 30.h,
-      child: TextButton(
-        onPressed: onPressed,
-        style: ButtonStyle(
-          side: MaterialStateProperty.all(
-            const BorderSide(
-              width: 1,
-              color: secondaryColor,
-            ),
-          ),
-          backgroundColor: MaterialStateProperty.all(
-            Colors.white,
-          ),
-          shape: MaterialStateProperty.all(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(22),
-            ),
-          ),
+    return GestureDetector(
+      onTap: disabled ? null : onPressed,
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.8,
+        height: 30.h,
+        decoration: BoxDecoration(
+          color: disabled ? Colors.grey : Colors.white,
+          borderRadius: BorderRadius.circular(22),
+          border: Border.all(color: disabled ? Colors.grey : Colors.black),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            icon ?? const Text(''),
-            const SizedBox(
-              width: 10,
-            ),
+            icon,
+            SizedBox(width: 10.w),
             Text(
               text,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: secondaryColor,
-                fontSize: 16,
+              style: TextStyle(
+                fontSize: 14.sp,
                 fontWeight: FontWeight.w600,
+                color: disabled ? Colors.white : Colors.black,
               ),
             ),
           ],

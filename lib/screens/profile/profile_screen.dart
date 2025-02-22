@@ -9,12 +9,9 @@ import 'package:Beepo/widgets/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-//import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
 
 import 'about.dart';
-
-//import '../../Utils/styles.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -25,10 +22,32 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
+  void initState() {
+    super.initState();
+    _initializeHiveData();
+  }
+
+  Future<void> _initializeHiveData() async {
+    final box = Hive.box('Beepo2.0');
+    if (box.get('imageUrl') == null) {
+      await box.put('imageUrl', "");
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final accountProvider = Provider.of<AccountProvider>(context, listen: true);
-    String img = Hive.box('Beepo2.0').get('base64Image');
-    Uint8List imageBytes = base64Decode(img);
+    String img = Hive.box('Beepo2.0').get('imageUrl', defaultValue: "");
+    Uint8List? imageBytes;
+
+    if (img.isNotEmpty) {
+      try {
+        imageBytes = base64Decode(img);
+      } catch (e) {
+        debugPrint("Error decoding image: $e");
+        imageBytes = null;
+      }
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -55,12 +74,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 alignment: Alignment.center,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(100),
-                  child: Image.memory(
-                    imageBytes,
-                    height: 120,
-                    width: 120,
-                    fit: BoxFit.cover,
-                  ),
+                  child: imageBytes != null
+                      ? Image.memory(
+                          imageBytes,
+                          height: 120,
+                          width: 120,
+                          fit: BoxFit.cover,
+                        )
+                      : Image.asset(
+                          AppImages.profile,
+                          height: 120,
+                          width: 120,
+                          fit: BoxFit.cover,
+                        ),
                 ),
               ),
               SizedBox(height: 15.h),
@@ -77,7 +103,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     onTap: () {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
-                        return EditProfileScreen(imageBytes: imageBytes);
+                        return EditProfileScreen(
+                            imageBytes: imageBytes ?? Uint8List(0));
                       }));
                     },
                     child: const Icon(

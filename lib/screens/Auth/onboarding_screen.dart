@@ -1,5 +1,4 @@
 import 'package:Beepo/screens/Auth/signup_screen.dart';
-import 'package:Beepo/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../Utils/styles.dart';
@@ -64,8 +63,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   // static get image => null;
   @override
   Widget build(BuildContext context) {
-    beepoPrint('object');
-    beepoPrint('object');
     return PopScope(
       canPop: false,
       child: Scaffold(

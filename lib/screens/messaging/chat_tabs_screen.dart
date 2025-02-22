@@ -165,13 +165,21 @@ class _StatusesState extends State<Statuses> {
   @override
   void initState() {
     super.initState();
+    _initializeHiveData();
+  }
+
+  Future<void> _initializeHiveData() async {
+    final box = Hive.box('Beepo2.0');
+    if (box.get('allUsers') == null) {
+      await box.put('allUsers', []);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final chatProvider = Provider.of<ChatProvider>(context, listen: true);
     List? statuses = chatProvider.statuses;
-    List users = Hive.box('Beepo2.0').get('allUsers');
+    final List users = Hive.box('Beepo2.0').get('allUsers', defaultValue: []);
 
     String? me = (context.read<AccountProvider>().ethAddress);
 

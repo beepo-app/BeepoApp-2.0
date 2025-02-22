@@ -71,20 +71,23 @@ class AccountProvider extends ChangeNotifier {
   }
 
   Future<String> initAccountState() async {
-    var username_ = await Hive.box('Beepo2.0').get('username');
-    var displayName_ = await Hive.box('Beepo2.0').get('displayName');
-    var ethAddress_ = await Hive.box('Beepo2.0').get('ethAddress');
-    String img_ = Hive.box('Beepo2.0').get('imageUrl');
     try {
+      final box = Hive.box('Beepo2.0');
+      var username_ = box.get('username') ?? "Unknown";
+      var displayName_ = box.get('displayName') ?? "Unknown";
+      var ethAddress_ = box.get('ethAddress') ?? "Unknown";
+      String img_ = box.get('imageUrl') ?? "";
+
       username = username_;
       displayName = displayName_;
       ethAddress = ethAddress_;
       img = img_;
+
       notifyListeners();
       return "";
     } catch (e) {
       debugPrint("INITIATE ACCOUNT STATE:$e");
-      return (e.toString());
+      return e.toString();
     }
   }
 

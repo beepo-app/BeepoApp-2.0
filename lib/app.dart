@@ -25,8 +25,8 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   late final AppLifecycleListener _lifeCycleListener;
-  late bool? isSignedUp = Hive.box('Beepo2.0').get('isSignedUp');
-  late bool isLocked = Hive.box('Beepo2.0').get('isLocked') ?? false;
+  late bool? isSignedUp;
+  late bool isLocked;
   late final StreamSubscription _lockSubscription;
   late final StreamSubscription _messageSubscription;
   late final StreamSubscription _convosSubscription;
@@ -35,6 +35,10 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+
+    // Initialize Hive data
+    isSignedUp = Hive.box('Beepo2.0').get('isSignedUp');
+    isLocked = Hive.box('Beepo2.0').get('isLocked') ?? false;
 
     _lifeCycleListener =
         AppLifecycleListener(onStateChange: _onLifeCycleChanged);
@@ -92,6 +96,22 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           .listen((event) async {
         await acctProvider.getAllUsers();
       });
+
+      // Check if user data exists in Hive
+      final ethAddress = Hive.box('Beepo2.0').get('ethAddress');
+      final displayName = Hive.box('Beepo2.0').get('displayName');
+      final imageUrl = Hive.box('Beepo2.0').get('imageUrl');
+
+      if (ethAddress != null && displayName != null && imageUrl != null) {
+        setState(() {
+          isSignedUp = true; // User data exists, navigate to dashboard
+        });
+      } else {
+        setState(() {
+          isSignedUp =
+              false; // User data does not exist, navigate to onboarding
+        });
+      }
     } catch (e) {
       if (kDebugMode) {
         beepoPrint(e);

@@ -84,11 +84,11 @@ class _ChatTabState extends State<ChatTab> {
             labelBackgroundColor: const Color(0xe50d004c),
           ),
         ],
-        body: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.only(left: 10.w, right: 10.w, top: 5.h),
-              child: Row(
+        body: Padding(
+          padding: EdgeInsets.only(left: 16.w, right: 16.w, top: 5.h),
+          child: Column(
+            children: [
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
@@ -119,14 +119,11 @@ class _ChatTabState extends State<ChatTab> {
                   ),
                 ],
               ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.only(left: 10.w, right: 10.w),
+              Expanded(
                 child: const Chat(),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
