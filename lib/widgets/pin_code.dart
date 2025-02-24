@@ -64,7 +64,7 @@ class _NumberKey extends StatelessWidget {
   final int? number;
   final void Function(int) onPressed;
 
-  const _NumberKey({super.key, this.number, required this.onPressed});
+  const _NumberKey({this.number, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {

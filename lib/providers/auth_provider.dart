@@ -7,7 +7,8 @@ import '../services/encryption.dart';
 
 Future<String> login(String pin) async {
   String padding = "000000000000";
-  String encryptedSeedPhrase = await Hive.box('Beepo2.0').get('encryptedSeedPhrase');
+  String encryptedSeedPhrase =
+      await Hive.box('Beepo2.0').get('encryptedSeedPhrase');
   String decryptedData = decryptWithAES(
     '$pin$padding',
     Encrypted(

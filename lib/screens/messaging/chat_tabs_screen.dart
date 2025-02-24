@@ -7,8 +7,9 @@ import 'package:Beepo/providers/chat_provider.dart';
 import 'package:Beepo/screens/messaging/chats/chat_tab.dart';
 // import 'package:Beepo/screens/messaging/chats/search_users_screen.dart';
 import 'package:Beepo/screens/moments/blank_status_screen.dart';
-import 'package:Beepo/screens/moments/init_camera.dart';
 import 'package:Beepo/screens/moments/moments_tab.dart';
+import 'package:Beepo/widgets/soon_dialog.dart';
+import 'package:Beepo/widgets/toast.dart';
 // import 'package:Beepo/widgets/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -105,7 +106,6 @@ class _MyTabBarState extends State<MyTabBar> {
       color: AppColors.secondaryColor,
       child: Column(
         children: [
-          // SizedBox(height: 10.h),
           TabBar(
             indicatorColor: AppColors.white,
             controller: widget.controller,
@@ -142,7 +142,6 @@ class _MyTabBarState extends State<MyTabBar> {
               // ),
             ],
           ),
-
           if ([0, 1].contains(pageIndex)) ...[
             SizedBox(height: 5.h),
             const Statuses(),
@@ -198,11 +197,12 @@ class _StatusesState extends State<Statuses> {
           const SizedBox(width: 20),
           InkWell(
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return const InitCamera(
-                  backDirection: false,
-                );
-              }));
+              showComingSoonDialog(context);
+              // Navigator.push(context, MaterialPageRoute(builder: (context) {
+              //   return const InitCamera(
+              //     backDirection: false,
+              //   );
+              // }));
             },
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
