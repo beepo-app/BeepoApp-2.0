@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:Beepo/components/Beepo_filled_button.dart';
 import 'package:Beepo/components/outline_button.dart';
 import 'package:Beepo/constants/constants.dart';
@@ -5,6 +7,7 @@ import 'package:Beepo/providers/wallet_provider.dart';
 import 'package:Beepo/screens/Auth/login_screen.dart';
 import 'package:Beepo/screens/Auth/pin_code.dart';
 import 'package:Beepo/screens/auth/create_acct_screen.dart';
+import 'package:Beepo/utils/ethereum_adapter.dart';
 import 'package:Beepo/widgets/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -24,87 +27,76 @@ class SignUp extends StatefulWidget {
 class _SignUpState extends State<SignUp> {
   bool _isLoading = false;
 
+  @override
+  void initState() {
+    super.initState();
+    _initializeHive();
+  }
+
+  Future<void> _initializeHive() async {
+    await Hive.initFlutter();
+    // Register adapters if needed
+    Hive.registerAdapter(EthereumAddressAdapter());
+  }
+
   Future<void> _handleGoogleSignIn() async {
     setState(() => _isLoading = true);
 
     try {
       final walletProvider =
           Provider.of<WalletProvider>(context, listen: false);
-      debugPrint("Authenticating with Google...");
 
-      // Initialize platform state
       await walletProvider.initPlatformState();
       debugPrint("Platform state initialized");
 
-      // Perform Web3Auth login
       final authResult = await walletProvider.web3AuthLogin();
-      debugPrint("Web3Auth login result: $authResult");
+      log("Web3Auth login result: $authResult");
 
-      if (authResult == null || authResult['error'] != null) {
-        throw Exception(authResult?['error'] ?? "Authentication failed");
+      if (authResult['error'] != null) {
+        throw Exception(authResult['error'] ?? "Authentication failed");
       }
 
-      // Initialize MPC wallet state
       await walletProvider.initMPCWalletState(authResult);
-      debugPrint(
-          "MPC wallet state initialized. ETH Address: ${walletProvider.ethAddress}");
+      log("MPC wallet state initialized. ETH Address: ${walletProvider.ethAddress}");
 
       if (walletProvider.ethAddress == null) {
         throw Exception("Wallet initialization failed");
       }
 
-      // Fetch user from Firebase
-      debugPrint("Fetching user from Firebase");
-      final FirebaseFirestore firestore = FirebaseFirestore.instance;
-      final userDoc = await firestore
-          .collection('users')
-          .doc(walletProvider.ethAddress.toString())
-          .get();
+      final userDoc =
+          await _fetchUserFromFirebase(walletProvider.ethAddress.toString());
 
       if (userDoc.exists) {
         final userData = userDoc.data() as Map<String, dynamic>;
         debugPrint("User found in Firebase");
 
-        // Extract Google profile data
         final googleProfile = authResult['userInfo'];
         final displayName = googleProfile['name'];
         final photoUrl = googleProfile['profileImage'];
 
-        // Store user data in Hive
         await _storeUserDataInHive({
           ...userData,
           'displayName': displayName,
           'imageUrl': photoUrl,
         });
 
-        // Set isSignedUp to true
-        await Hive.box('Beepo2.0').put('isSignedUp', true);
+        log("Stored user data: $userData");
 
-        debugPrint("STORE USER DATAS: $userData");
-
-        Get.to(
-          () => PinCode(
+        Get.to(() => PinCode(
             data: {'response': userData, 'mpc': authResult},
-            isSignedUp: true,
-          ),
-        );
+            isSignedUp: false));
       } else {
         debugPrint("No matching user found. Navigating to CreateAccountScreen");
 
-        // Extract Google profile data
         final googleProfile = authResult['userInfo'];
         final displayName = googleProfile['name'];
         final photoUrl = googleProfile['profileImage'];
 
-        // Store Google profile data in Hive
         await _storeUserDataInHive({
           'displayName': displayName,
           'imageUrl': photoUrl,
-          'ethAddress': walletProvider.ethAddress,
+          'ethAddress': walletProvider.ethAddress.toString(),
         });
-
-        // Set isSignedUp to true
-        await Hive.box('Beepo2.0').put('isSignedUp', true);
 
         Get.to(() => const CreateAccountScreen());
       }
@@ -116,7 +108,11 @@ class _SignUpState extends State<SignUp> {
     }
   }
 
-  // Store user data in Hive
+  Future<DocumentSnapshot> _fetchUserFromFirebase(String ethAddress) async {
+    final firestore = FirebaseFirestore.instance;
+    return await firestore.collection('users').doc(ethAddress).get();
+  }
+
   Future<void> _storeUserDataInHive(Map<String, dynamic> userData) async {
     try {
       final box = Hive.box('Beepo2.0');
@@ -157,8 +153,7 @@ class _SignUpState extends State<SignUp> {
                     onPressed: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const CreateAccountScreen(),
-                      ),
+                          builder: (context) => const CreateAccountScreen()),
                     ),
                   ),
                   SizedBox(height: 20.h),
@@ -167,8 +162,7 @@ class _SignUpState extends State<SignUp> {
                     onPressed: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const LoginScreen(),
-                      ),
+                          builder: (context) => const LoginScreen()),
                     ),
                   ),
                   SizedBox(height: 40.h),

@@ -131,6 +131,7 @@ class _PinCodeState extends State<PinCode> {
                             name: widget.name!,
                             image: widget.image!,
                             pin: otp.text,
+                            data: widget.data,
                           ),
                         ),
                       );

@@ -5,6 +5,7 @@ import 'package:Beepo/screens/wallet/send_assets_screen.dart';
 import 'package:Beepo/utils/logger.dart';
 import 'package:Beepo/widgets/app_text.dart';
 import 'package:Beepo/widgets/nft_list.dart';
+import 'package:Beepo/widgets/toast.dart';
 import 'package:Beepo/widgets/wallet_icon.dart';
 import 'package:Beepo/widgets/wallet_list.dart';
 import 'package:flutter/foundation.dart';
@@ -43,16 +44,19 @@ class _WalletScreenState extends State<WalletScreen> {
     // ),
   ];
 
-  getAssests() async {
+  @override
+  void initState() {
+    super.initState();
+    _fetchAssets();
+  }
+
+  Future<void> _fetchAssets() async {
     try {
       final walletProvider =
           Provider.of<WalletProvider>(context, listen: false);
-      // var res = await walletProvider.getAssets();
       List<dynamic>? assets_ = walletProvider.assets;
       setState(() {
-        if (assets_ != null) {
-          assets = assets_;
-        }
+        assets = assets_;
       });
     } catch (e) {
       if (kDebugMode) {
@@ -62,19 +66,9 @@ class _WalletScreenState extends State<WalletScreen> {
   }
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final walletProvider = Provider.of<WalletProvider>(context, listen: true);
-    assets = context.watch<WalletProvider>().assets;
-
-    // walletProvider.watchTxs();
-
-    // beepoPrint(assets);
-    // nftAssets = walletProvider.nftAssets;
+    assets = walletProvider.assets;
 
     return DefaultTabController(
       length: 2,
@@ -95,9 +89,7 @@ class _WalletScreenState extends State<WalletScreen> {
                   Icons.more_vert,
                   color: AppColors.secondaryColor,
                 ),
-                // icon: Icon,
                 onSelected: (value) {
-                  // Handle menu item selection here
                   beepoPrint('Selected: $value');
                 },
               ),
@@ -125,7 +117,7 @@ class _WalletScreenState extends State<WalletScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        "\$${walletProvider.totalBalance}",
+                        "\$${walletProvider.totalBalance ?? "0.00"}",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 20.sp,
@@ -149,26 +141,42 @@ class _WalletScreenState extends State<WalletScreen> {
                             icon: Icons.send_outlined,
                             angle: 5.7,
                             onTap: () {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return SendAssetsScreen(assets_: assets!);
-                              }));
+                              if (assets != null && assets!.isNotEmpty) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        SendAssetsScreen(assets_: assets!),
+                                  ),
+                                );
+                              } else {
+                                showToast("No assets available to send");
+                              }
                             },
                           ),
                           WalletIcon(
                             text: 'Receive',
                             icon: Icons.file_download_sharp,
                             onTap: () {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return ReceivedAssetScreen(assets_: assets!);
-                              }));
+                              if (assets != null && assets!.isNotEmpty) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        ReceivedAssetScreen(assets_: assets!),
+                                  ),
+                                );
+                              } else {
+                                showToast("No assets available to receive");
+                              }
                             },
                           ),
                           WalletIcon(
                             text: 'Buy',
                             icon: Icons.shopping_cart_outlined,
-                            onTap: () {},
+                            onTap: () {
+                              showToast("Buy feature not implemented yet");
+                            },
                           ),
                         ],
                       ),
@@ -209,17 +217,25 @@ class _WalletScreenState extends State<WalletScreen> {
                         padding: const EdgeInsets.all(15.0),
                         child: assets == null
                             ? const Center(child: CircularProgressIndicator())
-                            : WalletList(assets_: assets!),
+                            : assets!.isEmpty
+                                ? const Center(
+                                    child: Text("No crypto assets available"),
+                                  )
+                                : WalletList(assets_: assets!),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(15.0),
                         child: nftAssets == null
                             ? const Center(child: CircularProgressIndicator())
-                            : NFTList(assets_: nftAssets!),
+                            : nftAssets!.isEmpty
+                                ? const Center(
+                                    child: Text("No NFTs available"),
+                                  )
+                                : NFTList(assets_: nftAssets!),
                       ),
                     ],
                   ),
-                )
+                ),
               ],
             ),
           ),

@@ -116,13 +116,12 @@ class _VerifyCodeState extends State<VerifyCode> {
                 BeepoFilledButtons(
                   text: 'Continue',
                   onPressed: () async {
-                    _handleContinue();
+                    await _handleContinue();
                   },
                 ),
               ],
             ),
           ),
-
           // Loading Indicator
           if (_isLoading)
             IgnorePointer(
@@ -147,43 +146,69 @@ class _VerifyCodeState extends State<VerifyCode> {
       debugPrint("=== Starting Account Creation Process ===");
 
       // Step 1: Validate PIN
-      if (!_validatePin()) return;
+      debugPrint("Validating PIN...");
+      if (!_validatePin()) {
+        debugPrint("PIN validation failed.");
+        setState(() => _isLoading = false);
+        return;
+      }
+      debugPrint("PIN validation successful.");
 
       // Step 2: Initialize Providers
+      debugPrint("Initializing WalletProvider and AccountProvider...");
       final walletProvider =
           Provider.of<WalletProvider>(context, listen: false);
       final accountProvider =
           Provider.of<AccountProvider>(context, listen: false);
+      debugPrint("Providers initialized.");
 
       // Step 3: Generate Mnemonic
+      debugPrint("Generating mnemonic...");
       final mnemonic = await _generateMnemonic(walletProvider);
+      debugPrint("Mnemonic generated: $mnemonic");
 
       // Step 4: Encrypt Data
+      debugPrint("Encrypting data...");
       final encryptedData = _encryptData(mnemonic);
+      debugPrint("Data encrypted successfully.");
 
       // Step 5: Initialize Wallet
+      debugPrint("Initializing wallet...");
       final (ethAddress, btcAddress) =
           await _initializeWallet(walletProvider, mnemonic);
+      debugPrint(
+          "Wallet initialized. ETH Address: $ethAddress, BTC Address: $btcAddress");
 
       // Step 6: Process Image
+      debugPrint("Processing image...");
       _processImage(widget.image);
+      debugPrint("Image processed successfully.");
 
       // Step 7: Create or Update User
+      debugPrint("Creating or updating user...");
       await _createOrUpdateUser(
           accountProvider, encryptedData, ethAddress, btcAddress);
+      debugPrint("User created/updated successfully.");
 
       // Step 8: Authorize Session
+      debugPrint("Authorizing session...");
       await _authorizeSession(walletProvider);
+      debugPrint("Session authorized successfully.");
 
       // Step 9: Initialize Account State
+      debugPrint("Initializing account state...");
       await _initializeAccountState(accountProvider);
+      debugPrint("Account state initialized successfully.");
 
       // Step 10: Navigate to Main Screen
+      debugPrint("Navigating to BottomNavHome...");
       Get.offAll(() => const BottomNavHome());
+      debugPrint("Navigation complete.");
     } catch (e) {
       debugPrint("Critical Error: $e");
       showToast("An unexpected error occurred");
     } finally {
+      debugPrint("Stopping loading indicator.");
       setState(() => _isLoading = false);
     }
   }
@@ -198,8 +223,7 @@ class _VerifyCodeState extends State<VerifyCode> {
 
   Future<String> _generateMnemonic(WalletProvider walletProvider) async {
     try {
-      final mnemonic =
-          widget.mnemonic ?? await walletProvider.generateMnemonic();
+      final mnemonic = widget.mnemonic ?? walletProvider.generateMnemonic();
       if (mnemonic.isEmpty) throw Exception("Empty mnemonic generated");
       return mnemonic;
     } catch (e) {

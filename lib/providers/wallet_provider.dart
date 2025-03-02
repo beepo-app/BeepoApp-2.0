@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:Beepo/app.dart';
@@ -525,14 +526,14 @@ class WalletProvider extends ChangeNotifier {
       ));
 
       // Log the response for debugging
-      beepoPrint("RESPONSE AUTH:$response");
+      log("RESPONSE AUTHWEB 3 LOG:$response");
 
       // Store the response globally for later use
       mpcResponse = response;
 
       return response.toJson();
     } catch (e) {
-      beepoPrint('Error during login: $e');
+      log('Error during login web3: $e');
       return {'error': e.toString()};
     }
   }

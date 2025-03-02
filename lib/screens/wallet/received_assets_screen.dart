@@ -11,16 +11,14 @@ class ReceivedAssetScreen extends StatefulWidget {
     required this.assets_,
     super.key,
   });
+
   @override
   State<ReceivedAssetScreen> createState() => _ReceivedAssetScreenState();
 }
 
 class _ReceivedAssetScreenState extends State<ReceivedAssetScreen> {
-  bool isColor = false;
-
   @override
   Widget build(BuildContext context) {
-    List<dynamic> assets = widget.assets_;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -66,17 +64,31 @@ class _ReceivedAssetScreenState extends State<ReceivedAssetScreen> {
             SizedBox(height: 15.h),
             Expanded(
               child: ListView.separated(
-                itemCount: assets.length,
+                itemCount: widget.assets_.length,
                 physics: const AlwaysScrollableScrollPhysics(
                   parent: BouncingScrollPhysics(),
                 ),
-                padding: const EdgeInsets.symmetric(
-                  vertical: 10,
-                ),
+                padding: const EdgeInsets.symmetric(vertical: 10),
                 separatorBuilder: (_, int index) {
                   return const SizedBox(height: 20);
                 },
                 itemBuilder: (_, int index) {
+                  final asset = widget.assets_[index];
+                  final logoUrl = asset['logoUrl'] as String?;
+                  final displayName =
+                      asset['displayName'] as String? ?? "Unknown";
+                  final bal = asset['bal'] as String? ?? "0.0";
+                  final currentPrice =
+                      asset['current_price']?.toString() ?? "0.00";
+                  final priceChange =
+                      asset['24h_price_change']?.toString() ?? "0.0";
+                  final balToPrice =
+                      asset['bal_to_price']?.toString() ?? "0.00";
+                  final priceChangeColor =
+                      (double.tryParse(priceChange) ?? 0.0) > 0
+                          ? AppColors.activeTextColor
+                          : AppColors.favouriteButtonRed;
+
                   return Material(
                     elevation: 2,
                     shape: RoundedRectangleBorder(
@@ -85,16 +97,24 @@ class _ReceivedAssetScreenState extends State<ReceivedAssetScreen> {
                     color: AppColors.white,
                     child: ListTile(
                       onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) {
-                          return TokenScreenScan(data: assets[index]);
-                        }));
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => TokenScreenScan(data: asset),
+                          ),
+                        );
                       },
-                      leading: Image.network(assets[index]['logoUrl']),
+                      leading: logoUrl != null
+                          ? Image.network(
+                              logoUrl,
+                            )
+                          : const Icon(Icons.image_not_supported,
+                              color: Colors.grey),
                       title: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          AppText(text: assets[index]['displayName']),
-                          AppText(text: assets[index]['bal']),
+                          AppText(text: displayName),
+                          AppText(text: bal),
                         ],
                       ),
                       subtitle: Row(
@@ -102,15 +122,15 @@ class _ReceivedAssetScreenState extends State<ReceivedAssetScreen> {
                         children: [
                           Row(
                             children: [
-                              AppText(text: '\$${assets[index]['current_price'].toString()}'),
+                              AppText(text: '\$$currentPrice'),
                               SizedBox(width: 8.w),
                               AppText(
-                                text: '${assets[index]['24h_price_change'].toString()}%',
-                                color: assets[index]['24h_price_change'] > 0 ? AppColors.activeTextColor : AppColors.favouriteButtonRed,
+                                text: '$priceChange%',
+                                color: priceChangeColor,
                               ),
                             ],
                           ),
-                          AppText(text: "\$${assets[index]['bal_to_price'].toString()}"),
+                          AppText(text: "\$$balToPrice"),
                         ],
                       ),
                     ),

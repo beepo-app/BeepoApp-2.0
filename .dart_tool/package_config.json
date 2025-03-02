@@ -729,9 +729,9 @@
     },
     {
       "name": "http2",
-      "rootUri": "file:///C:/Users/Favour%20Williams/AppData/Local/Pub/Cache/hosted/pub.dev/http2-2.3.0",
+      "rootUri": "file:///C:/Users/Favour%20Williams/AppData/Local/Pub/Cache/hosted/pub.dev/http2-2.3.1",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "3.2"
     },
     {
       "name": "http_multi_server",
@@ -1610,7 +1610,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2025-02-22T00:40:21.015129Z",
+  "generated": "2025-02-26T21:30:37.397341Z",
   "generator": "pub",
   "generatorVersion": "3.6.2",
   "flutterRoot": "file:///C:/src/flutter",

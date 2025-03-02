@@ -7,9 +7,6 @@ class AlchemyService {
   final String _alchemyApiKey = dotenv.env['ALCHEMY_API_KEY'] ?? '';
   final String _alchemyBaseUrl = 'https://eth-mainnet.g.alchemy.com/';
 
-  // Create HTTP client for Alchemy API calls
-  final _client = http.Client();
-
   // Get ERC20 token balance using Alchemy API
   Future<double> getTokenBalance(
       String contractAddress, String walletAddress, String network) async {
